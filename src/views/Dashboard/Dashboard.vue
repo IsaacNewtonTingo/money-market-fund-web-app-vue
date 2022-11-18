@@ -2,7 +2,9 @@
 
 <script>
 export default {
-  name: "HomeView",
-  components: {},
+  name: "Dashboard",
 };
 </script>
+
+<style>
+</style>
