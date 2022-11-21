@@ -6,6 +6,27 @@
     :phoneNumber="phoneNumber"
   />
 
+  <div v-if="showModal" class="modalContainer">
+    <div class="innerModal">
+      <form @submit.prevent="depositFunds">
+        <label for="">Phone number</label>
+        <input
+          type="tel"
+          placeholder="e.g 254724753175"
+          v-model="this.phoneNumber"
+        />
+
+        <label for="">Amount</label>
+        <input type="number" placeholder="e.g 2000" />
+
+        <button class="depositBTN">Deposit</button>
+        <button @click="this.showModal = false" class="withdrawBTN">
+          Cancel
+        </button>
+      </form>
+    </div>
+  </div>
+
   <div class="rightItems">
     <h1 class="heading">Hello {{ firstName }} {{ lastName }}</h1>
 
@@ -23,15 +44,29 @@
 
           <div class="extraDetails">
             <p class="keyNames">
-              <span>Amount deposited</span> {{ userPlan.amountAvailable }}
+              <span>Amount deposited</span> KSH.
+              {{ userPlan.amountAvailable.toFixed(2) }}
             </p>
 
             <p class="keyNames">
-              <span>Expected interest</span> {{ userPlan.amountAvailable }}
+              <span>Expected interest</span> KSH.
+              {{
+                (
+                  (userPlan.plan.interestRate / 100) *
+                  userPlan.amountAvailable
+                ).toFixed(2)
+              }}
             </p>
 
             <p class="keyNames">
-              <span>Expected income</span> {{ userPlan.amountAvailable }}
+              <span>Expected income</span> KSH.
+              {{
+                (
+                  (userPlan.plan.interestRate / 100) *
+                    userPlan.amountAvailable +
+                  userPlan.amountAvailable
+                ).toFixed(2)
+              }}
             </p>
 
             <p class="keyNames">
@@ -45,8 +80,25 @@
           </div>
 
           <div class="btns">
-            <button class="depositBTN">Deposit</button>
-            <button class="withdrawBTN">Withdraw</button>
+            <button
+              @click="setShowModal({ planID: userPlan._id })"
+              class="depositBTN"
+            >
+              Deposit
+            </button>
+
+            <button
+              disabled
+              v-if="getTodayDate() > userPlan.maturityDate"
+              @submit="withdrawFunds"
+              class="notYetBTN"
+            >
+              Not yet time
+            </button>
+
+            <button v-else @submit="withdrawFunds" class="withdrawBTN">
+              Withdraw
+            </button>
           </div>
         </div>
       </div>
@@ -64,10 +116,16 @@ export default {
   components: { LeftFloat },
   data() {
     return {
+      userID: localStorage.getItem("userID"),
       firstName: "",
       lastName: "",
       phoneNumber: "",
       email: "",
+
+      amount: 1,
+      showModal: false,
+
+      planID: "",
 
       userPlans: [],
     };
@@ -75,6 +133,28 @@ export default {
   methods: {
     getMaturityDate(date) {
       return moment(date).format("MMM Do YYYY");
+    },
+    getTodayDate() {
+      return moment().format();
+    },
+    setShowModal({ planID }) {
+      this.showModal = true;
+      this.planID = planID;
+    },
+    async depositFunds() {
+      await axios
+        .post(`http://localhost:3000/api/user/payments/make-payment/`, {
+          phoneNumber: parseInt(this.phoneNumber),
+          userID: this.userID,
+          planID: this.planID,
+          amount: this.amount,
+        })
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
   async mounted() {
@@ -117,6 +197,29 @@ export default {
   padding: 40px;
   width: 70%;
 }
+.modalContainer {
+  height: 100%;
+  width: 80%;
+  background: rgba(159, 184, 176, 0.9);
+  display: flex;
+  flex: 1;
+  position: absolute;
+  z-index: 1;
+  align-items: center;
+  justify-content: center;
+  right: 20px;
+}
+.innerModal {
+  background: linear-gradient(
+    146.03deg,
+    #091e18 13.77%,
+    rgba(159, 184, 176, 0) 148.56%
+  );
+  filter: drop-shadow(2px 2px 4px #000000);
+  padding: 40px;
+  border-radius: 20px;
+  width: 30%;
+}
 .heading {
   color: #006b4d;
 }
@@ -144,7 +247,7 @@ export default {
   font-weight: 800;
   text-align: center;
   margin: 10px 0;
-  font-size: 14px;
+  font-size: 16px;
 }
 .planItem {
   width: 20%;
@@ -156,7 +259,7 @@ export default {
   filter: drop-shadow(2px 2px 4px #000000);
   border-radius: 10px;
   height: 300px;
-  padding: 10px;
+  padding: 20px;
   margin: 0 0 40px 0;
   display: flex;
   flex-direction: column;
@@ -185,11 +288,17 @@ export default {
 }
 .depositBTN {
   background: #195846;
-  font-size: 12px;
+  font-size: 10px;
 }
 .withdrawBTN {
   background: none;
   border: solid #9a9a9a 1px;
-  font-size: 12px;
+  font-size: 10px;
+}
+.notYetBTN {
+  background: none;
+  border: solid #4b4b4b 1px;
+  font-size: 10px;
+  color: #828282;
 }
 </style>
