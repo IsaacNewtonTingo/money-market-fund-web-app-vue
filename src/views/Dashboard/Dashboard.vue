@@ -124,6 +124,8 @@ export default {
 
       amount: 1,
       showModal: false,
+      isLoading: false,
+      isSubmitting: false,
 
       planID: "",
 
