@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Landing from "../views//Welcome/Landing.vue";
-import Login from "../views//Welcome/Login.vue";
-import Signup from "../views//Welcome/Signup.vue";
+import Landing from "../views/Welcome/Landing.vue";
+import Login from "../views/Welcome/Login.vue";
+import Signup from "../views/Welcome/Signup.vue";
+import Dashboard from "../views/Dashboard/Dashboard.vue";
 
 const routes = [
   {
@@ -20,6 +21,12 @@ const routes = [
     path: "/signup",
     name: "signup",
     component: Signup,
+  },
+
+  {
+    path: "/dashboard",
+    name: "dashboard",
+    component: Dashboard,
   },
 ];
 

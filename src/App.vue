@@ -1,14 +1,11 @@
 <template>
-  <!-- <LeftFloat /> -->
   <router-view />
 </template>
 
 <script>
-import Landing from "./views/Welcome/Landing.vue";
-
 export default {
   name: "App",
-  components: { Landing },
+  components: {},
 };
 </script>
 
