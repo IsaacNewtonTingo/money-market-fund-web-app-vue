@@ -4,11 +4,6 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
     </nav> -->
-
-    <p>{{ firstName }}</p>
-    <p>{{ lastName }}</p>
-    <p>{{ email }}</p>
-    <p>{{ phoneNumber }}</p>
   </div>
 </template>
 

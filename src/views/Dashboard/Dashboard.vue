@@ -5,11 +5,59 @@
     :email="email"
     :phoneNumber="phoneNumber"
   />
+
+  <div class="rightItems">
+    <h1 class="heading">Hello {{ firstName }} {{ lastName }}</h1>
+
+    <div class="savingsPlans">
+      <div class="combText">
+        <p class="subHeading">Your savings plans</p>
+        <!-- <router-link>View all</router-link> -->
+      </div>
+
+      <div class="planContainer">
+        <div v-for="userPlan in userPlans" :key="userPlan._id" class="planItem">
+          <p class="planName">
+            {{ userPlan.plan.investmentPlanName }}
+          </p>
+
+          <div class="extraDetails">
+            <p class="keyNames">
+              <span>Amount deposited</span> {{ userPlan.amountAvailable }}
+            </p>
+
+            <p class="keyNames">
+              <span>Expected interest</span> {{ userPlan.amountAvailable }}
+            </p>
+
+            <p class="keyNames">
+              <span>Expected income</span> {{ userPlan.amountAvailable }}
+            </p>
+
+            <p class="keyNames">
+              <span>Maturity date</span>
+              {{
+                userPlan.maturityDate != null
+                  ? getMaturityDate(userPlan.maturityDate)
+                  : "n/a"
+              }}
+            </p>
+          </div>
+
+          <div class="btns">
+            <button class="depositBTN">Deposit</button>
+            <button class="withdrawBTN">Withdraw</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import LeftFloat from "@/components/leftFloat.vue";
 import axios from "axios";
+import moment from "moment";
 
 export default {
   name: "Dashboard",
@@ -20,9 +68,16 @@ export default {
       lastName: "",
       phoneNumber: "",
       email: "",
+
+      userPlans: [],
     };
   },
-  async created() {
+  methods: {
+    getMaturityDate(date) {
+      return moment(date).format("MMM Do YYYY");
+    },
+  },
+  async mounted() {
     await axios
       .get(
         `http://localhost:3000/api/user/get-user-profile/${localStorage.getItem(
@@ -38,10 +93,103 @@ export default {
         } else {
           console.log(response.data.message);
         }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    await axios
+      .get(
+        `http://localhost:3000/api/user/user-plans/get-my-plans/${localStorage.getItem(
+          "userID"
+        )}`
+      )
+      .then((response) => {
+        this.userPlans = response.data;
       });
   },
 };
 </script>
 
 <style>
+.rightItems {
+  float: right;
+  padding: 40px;
+  width: 70%;
+}
+.heading {
+  color: #006b4d;
+}
+.savingsPlans {
+  margin: 40px 0;
+}
+.subHeading {
+  font-weight: 800;
+  color: #006b4d;
+}
+.planContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+.combText {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.planName {
+  color: white;
+  font-weight: 800;
+  text-align: center;
+  margin: 10px 0;
+  font-size: 14px;
+}
+.planItem {
+  width: 20%;
+  background: linear-gradient(
+    146.03deg,
+    #091e18 13.77%,
+    rgba(159, 184, 176, 0) 148.56%
+  );
+  filter: drop-shadow(2px 2px 4px #000000);
+  border-radius: 10px;
+  height: 300px;
+  padding: 10px;
+  margin: 0 0 40px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+.btns {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.keyNames {
+  color: rgb(235, 235, 235);
+  font-weight: 600;
+  font-size: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0 10px;
+}
+.keyNames span {
+  color: #9a9a9a;
+}
+.extraDetails {
+  width: 100%;
+}
+.depositBTN {
+  background: #195846;
+  font-size: 12px;
+}
+.withdrawBTN {
+  background: none;
+  border: solid #9a9a9a 1px;
+  font-size: 12px;
+}
 </style>
