@@ -40,14 +40,14 @@
         </form>
       </div>
 
-      <div v-if="checkPaymentModal" class="checkPayModal">
+      <!-- <div v-if="checkPaymentModal" class="checkPayModal">
         <h2>Checking payment</h2>
         <img src="../../assets/loading.gif" alt="" />
       </div>
 
       <div v-if="paymentMessage" class="checkPayModal">
         <h2>Payment made successfully</h2>
-      </div>
+      </div> -->
     </div>
 
     <div class="rightItems">
@@ -207,9 +207,9 @@ export default {
             );
             const CheckoutRequestID = response.data.CheckoutRequestID;
 
-            this.checkPaymentModal = true;
-            this.showPayForm = false;
-            this.checkPayment({ CheckoutRequestID });
+            // this.checkPaymentModal = true;
+            // this.showPayForm = false;
+            // this.checkPayment({ CheckoutRequestID });
           } else {
             //some error has occured
             console.log("An error occured");
@@ -237,8 +237,7 @@ export default {
 
               this.paymentMessage = true;
               console.log("Payment made successfully");
-              this.showModal = false;
-              this.$router.push("Dashboard");
+              this.checkPaymentModal = false;
             }
           })
           .catch((err) => {
@@ -248,7 +247,8 @@ export default {
 
       const timeout = setTimeout(function () {
         clearInterval(timerID);
-        this.showModal = false;
+        this.checkPaymentModal = false;
+
         if (!this.paymentMessage) {
           console.log("Payment wasn't made");
         } else {
