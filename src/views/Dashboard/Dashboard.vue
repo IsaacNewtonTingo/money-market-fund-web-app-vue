@@ -9,10 +9,11 @@
       :lastName="lastName"
       :email="email"
       :phoneNumber="phoneNumber"
+      :active="active"
     />
 
     <div v-if="showModal" class="modalContainer">
-      <div class="innerModal">
+      <div v-if="showPayForm" class="innerModal">
         <form @submit.prevent="depositFunds">
           <label for="">Phone number</label>
           <input
@@ -37,6 +38,15 @@
             Cancel
           </button>
         </form>
+      </div>
+
+      <div v-if="checkPaymentModal" class="checkPayModal">
+        <h2>Checking payment</h2>
+        <img src="../../assets/loading.gif" alt="" />
+      </div>
+
+      <div v-if="paymentMessage" class="checkPayModal">
+        <h2>Payment made successfully</h2>
       </div>
     </div>
 
@@ -149,10 +159,15 @@ export default {
 
       amount: "",
       showModal: false,
+      showPayForm: false,
+      checkPaymentModal: false,
+      checkingPayment: false,
       isLoading: true,
       isSubmitting: false,
+      active: true,
 
       planID: "",
+      paymentMessage: false,
 
       userPlans: [],
     };
@@ -166,6 +181,7 @@ export default {
     },
     setShowModal({ planID }) {
       this.showModal = true;
+      this.showPayForm = true;
       this.planID = planID;
     },
     async depositFunds() {
@@ -189,7 +205,11 @@ export default {
             alert(
               `${response.data.ResponseDescription}. Please check your phone for an M-PESA prompt to complete transaction.`
             );
-            console.log("Success");
+            const CheckoutRequestID = response.data.CheckoutRequestID;
+
+            this.checkPaymentModal = true;
+            this.showPayForm = false;
+            this.checkPayment({ CheckoutRequestID });
           } else {
             //some error has occured
             console.log("An error occured");
@@ -199,6 +219,41 @@ export default {
           this.isSubmitting = false;
           console.log(err);
         });
+    },
+    async checkPayment({ CheckoutRequestID }) {
+      var timerID = setInterval(async function () {
+        await axios
+          .post(
+            `http://localhost:3000/api/user/payments/check-payment-status`,
+            {
+              CheckoutRequestID,
+            }
+          )
+          .then((response) => {
+            console.log(response.data);
+            if (response.data.status === "Success") {
+              clearInterval(timerID);
+              clearTimeout(timeout);
+
+              this.paymentMessage = true;
+              console.log("Payment made successfully");
+              this.showModal = false;
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }, 1000);
+
+      const timeout = setTimeout(function () {
+        clearInterval(timerID);
+        this.showModal = false;
+        if (!this.paymentMessage) {
+          console.log("Payment wasn't made");
+        } else {
+          this.paymentMessage = false;
+        }
+      }, 30000);
     },
   },
   async mounted() {
@@ -375,5 +430,29 @@ export default {
   border: solid #4b4b4b 1px;
   font-size: 10px;
   color: #828282;
+}
+.checkPayModal {
+  width: 40%;
+  height: 40vh;
+  border-radius: 10px;
+  background: linear-gradient(
+    146.03deg,
+    #091e18 13.77%,
+    rgba(159, 184, 176, 0) 148.56%
+  );
+  filter: drop-shadow(2px 2px 4px #000000);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: column;
+  padding: 20px;
+}
+.checkPayModal img {
+  width: 100px;
+  height: 100px;
+}
+.checkPayModal h2 {
+  color: white;
+  font-weight: 800;
 }
 </style>

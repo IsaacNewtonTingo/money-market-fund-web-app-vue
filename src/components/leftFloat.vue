@@ -40,16 +40,16 @@
         <router-link :to="{ name: 'settings' }">Settings</router-link>
       </div>
 
-      <div class="linky">
+      <!-- <div class="linky">
         <router-link to="/dashboard">Logout</router-link>
-      </div>
+      </div> -->
     </nav>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["firstName", "lastName", "email", "phoneNumber"],
+  props: ["firstName", "lastName", "email", "phoneNumber", "active"],
   name: "LeftFloat",
 };
 </script>
@@ -81,8 +81,7 @@ nav a {
 }
 
 nav a.router-link-exact-active {
-  color: #00381f;
-  text-align: center;
+  color: #ff6a00;
 }
 
 .profileItem {
@@ -95,6 +94,7 @@ nav a.router-link-exact-active {
   border-radius: 10px;
   align-items: center;
   border: solid 1px rgb(104, 166, 146);
+  cursor: pointer;
 }
 
 .profilePic {
