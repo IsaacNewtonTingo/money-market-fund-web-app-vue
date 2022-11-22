@@ -15,23 +15,29 @@
 
     <nav class="leftInteriorNav">
       <div class="linky">
-        <router-link to="/dashboard">Dashboard</router-link>
+        <router-link :to="{ name: 'dashboard' }">Dashboard</router-link>
       </div>
 
       <div class="linky">
-        <router-link to="/dashboard">My savings plans</router-link>
+        <router-link :to="{ name: 'allUserPlans' }"
+          >My savings plans</router-link
+        >
       </div>
 
       <div class="linky">
-        <router-link to="/dashboard">My transactions</router-link>
+        <router-link :to="{ name: 'myTransactions' }"
+          >My transactions</router-link
+        >
       </div>
 
       <div class="linky">
-        <router-link to="/dashboard">My withdrawals</router-link>
+        <router-link :to="{ name: 'myWithdrawals' }"
+          >My withdrawals</router-link
+        >
       </div>
 
       <div class="linky">
-        <router-link to="/dashboard">Settings</router-link>
+        <router-link :to="{ name: 'settings' }">Settings</router-link>
       </div>
 
       <div class="linky">
@@ -70,19 +76,15 @@ export default {
   border-bottom: solid 1px rgb(237, 237, 237);
 }
 
+nav a {
+  color: #00381f;
+}
+
 nav a.router-link-exact-active {
   color: #00381f;
   text-align: center;
 }
 
-nav a {
-  font-weight: 800;
-  color: #ffffff;
-  text-decoration: none;
-  padding: 10px;
-  border-radius: 4px;
-  text-align: center;
-}
 .profileItem {
   display: flex;
   flex-direction: row;

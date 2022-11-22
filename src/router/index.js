@@ -3,6 +3,10 @@ import Landing from "../views/Welcome/Landing.vue";
 import Login from "../views/Welcome/Login.vue";
 import Signup from "../views/Welcome/Signup.vue";
 import Dashboard from "../views/Dashboard/Dashboard.vue";
+import AllUserPlans from "../views/Dashboard/All-user-plans.vue";
+import MyTransactions from "../views/Dashboard/my-transactions.vue";
+import MyWithdrawals from "../views/Dashboard/myWithdrawals.vue";
+import Settings from "../views/Dashboard/settings.vue";
 
 const routes = [
   {
@@ -27,6 +31,30 @@ const routes = [
     path: "/dashboard",
     name: "dashboard",
     component: Dashboard,
+  },
+
+  {
+    path: "/all-user-plans",
+    name: "allUserPlans",
+    component: AllUserPlans,
+  },
+
+  {
+    path: "/my-transactions",
+    name: "myTransactions",
+    component: MyTransactions,
+  },
+
+  {
+    path: "/my-withdrawals",
+    name: "myWithdrawals",
+    component: MyWithdrawals,
+  },
+
+  {
+    path: "/settings",
+    name: "settings",
+    component: Settings,
   },
 ];
 

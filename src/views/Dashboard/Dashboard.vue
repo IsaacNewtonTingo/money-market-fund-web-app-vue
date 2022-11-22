@@ -179,6 +179,8 @@ export default {
         })
         .then((response) => {
           this.isSubmitting = false;
+          this.planID = "";
+          this.amount = "";
 
           console.log(response.data);
 
