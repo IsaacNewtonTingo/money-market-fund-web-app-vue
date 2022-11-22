@@ -1,105 +1,130 @@
 <template>
-  <LeftFloat
-    :firstName="firstName"
-    :lastName="lastName"
-    :email="email"
-    :phoneNumber="phoneNumber"
-  />
-
-  <div v-if="showModal" class="modalContainer">
-    <div class="innerModal">
-      <form @submit.prevent="depositFunds">
-        <label for="">Phone number</label>
-        <input
-          type="tel"
-          placeholder="e.g 254724753175"
-          v-model="this.phoneNumber"
-        />
-
-        <label for="">Amount</label>
-        <input type="number" placeholder="e.g 2000" />
-
-        <button class="depositBTN">Deposit</button>
-        <button @click="this.showModal = false" class="withdrawBTN">
-          Cancel
-        </button>
-      </form>
-    </div>
+  <div v-if="isLoading" class="loadingScreen">
+    <img src="../../assets/loading.gif" alt="" />
   </div>
 
-  <div class="rightItems">
-    <h1 class="heading">Hello {{ firstName }} {{ lastName }}</h1>
+  <div v-else>
+    <LeftFloat
+      :firstName="firstName"
+      :lastName="lastName"
+      :email="email"
+      :phoneNumber="phoneNumber"
+    />
 
-    <div class="savingsPlans">
-      <div class="combText">
-        <p class="subHeading">Your savings plans</p>
-        <!-- <router-link>View all</router-link> -->
+    <div v-if="showModal" class="modalContainer">
+      <div class="innerModal">
+        <form @submit.prevent="depositFunds">
+          <label for="">Phone number</label>
+          <input
+            type="tel"
+            placeholder="e.g 254724753175"
+            v-model="this.phoneNumber"
+          />
+
+          <label for="">Amount</label>
+          <input v-model="this.amount" type="number" placeholder="e.g 2000" />
+
+          <button :disabled="isSubmitting" class="depositBTN">
+            <img
+              class="loadingGif"
+              v-if="isSubmitting"
+              src="../../assets/loading.gif"
+              alt=""
+            />
+            <div v-else>Deposit</div>
+          </button>
+          <button @click="this.showModal = false" class="withdrawBTN">
+            Cancel
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="rightItems">
+      <h1 class="heading">Hello {{ firstName }} {{ lastName }}</h1>
+
+      <div class="savingsPlans">
+        <div class="combText">
+          <p class="subHeading">Your savings plans</p>
+          <router-link to="/dashboard" class="viewAll">View all</router-link>
+        </div>
+
+        <div class="planContainer">
+          <div
+            v-for="userPlan in userPlans"
+            :key="userPlan._id"
+            class="planItem"
+          >
+            <p class="planName">
+              {{ userPlan.plan.investmentPlanName }}
+            </p>
+
+            <div class="extraDetails">
+              <p class="keyNames">
+                <span>Amount deposited</span> KSH.
+                {{ userPlan.amountAvailable.toFixed(2) }}
+              </p>
+
+              <p class="keyNames">
+                <span>Expected interest</span> KSH.
+                {{
+                  (
+                    (userPlan.plan.interestRate / 100) *
+                    userPlan.amountAvailable
+                  ).toFixed(2)
+                }}
+              </p>
+
+              <p class="keyNames">
+                <span>Expected income</span> KSH.
+                {{
+                  (
+                    (userPlan.plan.interestRate / 100) *
+                      userPlan.amountAvailable +
+                    userPlan.amountAvailable
+                  ).toFixed(2)
+                }}
+              </p>
+
+              <p class="keyNames">
+                <span>Maturity date</span>
+                {{
+                  userPlan.maturityDate != null
+                    ? getMaturityDate(userPlan.maturityDate)
+                    : "n/a"
+                }}
+              </p>
+            </div>
+
+            <div class="btns">
+              <button
+                @click="setShowModal({ planID: userPlan._id })"
+                class="depositBTN"
+              >
+                Deposit
+              </button>
+
+              <button
+                disabled
+                v-if="getMaturityDate(userPlan.maturityDate) > getTodayDate()"
+                @submit="withdrawFunds"
+                class="notYetBTN"
+              >
+                Not yet time
+              </button>
+
+              <button v-else @submit="withdrawFunds" class="withdrawBTN">
+                Withdraw
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="planContainer">
-        <div v-for="userPlan in userPlans" :key="userPlan._id" class="planItem">
-          <p class="planName">
-            {{ userPlan.plan.investmentPlanName }}
-          </p>
-
-          <div class="extraDetails">
-            <p class="keyNames">
-              <span>Amount deposited</span> KSH.
-              {{ userPlan.amountAvailable.toFixed(2) }}
-            </p>
-
-            <p class="keyNames">
-              <span>Expected interest</span> KSH.
-              {{
-                (
-                  (userPlan.plan.interestRate / 100) *
-                  userPlan.amountAvailable
-                ).toFixed(2)
-              }}
-            </p>
-
-            <p class="keyNames">
-              <span>Expected income</span> KSH.
-              {{
-                (
-                  (userPlan.plan.interestRate / 100) *
-                    userPlan.amountAvailable +
-                  userPlan.amountAvailable
-                ).toFixed(2)
-              }}
-            </p>
-
-            <p class="keyNames">
-              <span>Maturity date</span>
-              {{
-                userPlan.maturityDate != null
-                  ? getMaturityDate(userPlan.maturityDate)
-                  : "n/a"
-              }}
-            </p>
-          </div>
-
-          <div class="btns">
-            <button
-              @click="setShowModal({ planID: userPlan._id })"
-              class="depositBTN"
-            >
-              Deposit
-            </button>
-
-            <button
-              disabled
-              v-if="getTodayDate() > userPlan.maturityDate"
-              @submit="withdrawFunds"
-              class="notYetBTN"
-            >
-              Not yet time
-            </button>
-
-            <button v-else @submit="withdrawFunds" class="withdrawBTN">
-              Withdraw
-            </button>
-          </div>
+      <div class="previousTransactionsContainer">
+        <div class="combText">
+          <p class="subHeading">Your previous transactions</p>
+          <!-- <router-link>View all</router-link> -->
         </div>
       </div>
     </div>
@@ -122,9 +147,9 @@ export default {
       phoneNumber: "",
       email: "",
 
-      amount: 1,
+      amount: "",
       showModal: false,
-      isLoading: false,
+      isLoading: true,
       isSubmitting: false,
 
       planID: "",
@@ -137,13 +162,14 @@ export default {
       return moment(date).format("MMM Do YYYY");
     },
     getTodayDate() {
-      return moment().format();
+      return moment().format("MMM Do YYYY");
     },
     setShowModal({ planID }) {
       this.showModal = true;
       this.planID = planID;
     },
     async depositFunds() {
+      this.isSubmitting = true;
       await axios
         .post(`http://localhost:3000/api/user/payments/make-payment/`, {
           phoneNumber: parseInt(this.phoneNumber),
@@ -152,9 +178,23 @@ export default {
           amount: this.amount,
         })
         .then((response) => {
+          this.isSubmitting = false;
+
           console.log(response.data);
+
+          if (response.data.ResponseCode === "0") {
+            //stk push sent
+            alert(
+              `${response.data.ResponseDescription}. Please check your phone for an M-PESA prompt to complete transaction.`
+            );
+            console.log("Success");
+          } else {
+            //some error has occured
+            console.log("An error occured");
+          }
         })
         .catch((err) => {
+          this.isSubmitting = false;
           console.log(err);
         });
     },
@@ -177,6 +217,7 @@ export default {
         }
       })
       .catch((err) => {
+        this.isLoading = false;
         console.log(err);
       });
 
@@ -188,6 +229,11 @@ export default {
       )
       .then((response) => {
         this.userPlans = response.data;
+        this.isLoading = false;
+      })
+      .catch((err) => {
+        this.isLoading = false;
+        console.log(err);
       });
   },
 };
@@ -198,11 +244,12 @@ export default {
   float: right;
   padding: 40px;
   width: 70%;
+  background: rgb(248, 255, 250);
 }
 .modalContainer {
   height: 100%;
-  width: 80%;
-  background: rgba(159, 184, 176, 0.9);
+  width: 100%;
+  background: rgba(159, 184, 176, 0.95);
   display: flex;
   flex: 1;
   position: absolute;
@@ -210,6 +257,25 @@ export default {
   align-items: center;
   justify-content: center;
   right: 20px;
+}
+.loadingScreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  text-align: center;
+  flex: 1;
+  background: rgb(248, 255, 250);
+}
+.loadingScreen img {
+  width: 100px;
+  height: 100px;
+}
+.viewAll {
+  text-decoration-line: underline;
+  font-weight: 800;
+  color: #006b4d;
 }
 .innerModal {
   background: linear-gradient(
@@ -272,6 +338,11 @@ export default {
   display: flex;
   flex-direction: column;
   width: 100%;
+}
+.loadingGif {
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
 }
 .keyNames {
   color: rgb(235, 235, 235);
