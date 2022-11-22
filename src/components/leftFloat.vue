@@ -1,6 +1,6 @@
 <template>
   <div class="leftFloat">
-    <div class="profileItem">
+    <div @click="this.goToProfile" class="profileItem">
       <img
         class="profilePic"
         src="https://media.istockphoto.com/id/1386479313/photo/happy-millennial-afro-american-business-woman-posing-isolated-on-white.jpg?b=1&s=170667a&w=0&k=20&c=ahypUC_KTc95VOsBkzLFZiCQ0VJwewfrSV43BOrLETM="
@@ -51,6 +51,12 @@
 export default {
   props: ["firstName", "lastName", "email", "phoneNumber", "active"],
   name: "LeftFloat",
+
+  methods: {
+    goToProfile() {
+      this.$router.push("profile");
+    },
+  },
 };
 </script>
 

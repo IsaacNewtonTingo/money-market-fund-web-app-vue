@@ -7,6 +7,7 @@ import AllUserPlans from "../views/Dashboard/All-user-plans.vue";
 import MyTransactions from "../views/Dashboard/my-transactions.vue";
 import MyWithdrawals from "../views/Dashboard/myWithdrawals.vue";
 import Settings from "../views/Dashboard/settings.vue";
+import Profile from "../views/Dashboard/profile.vue";
 
 const routes = [
   {
@@ -55,6 +56,12 @@ const routes = [
     path: "/settings",
     name: "settings",
     component: Settings,
+  },
+
+  {
+    path: "/profile",
+    name: "profile",
+    component: Profile,
   },
 ];
 
