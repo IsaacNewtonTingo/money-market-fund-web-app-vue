@@ -238,6 +238,7 @@ export default {
               this.paymentMessage = true;
               console.log("Payment made successfully");
               this.showModal = false;
+              this.$router.push("Dashboard");
             }
           })
           .catch((err) => {
