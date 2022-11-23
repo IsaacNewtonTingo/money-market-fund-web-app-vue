@@ -14,7 +14,51 @@
     <div v-if="showModal" class="modalContainer"></div>
 
     <div class="rightItems">
-      <h1 class="heading">Profile</h1>
+      <div class="combText">
+        <h3 class="subHeading">Personal details</h3>
+        <h3 class="subHeading">Edit</h3>
+      </div>
+
+      <div class="detailsContainer">
+        <div class="profileImageContainer">
+          <img
+            src="https://media.istockphoto.com/id/1386479313/photo/happy-millennial-afro-american-business-woman-posing-isolated-on-white.jpg?b=1&s=170667a&w=0&k=20&c=ahypUC_KTc95VOsBkzLFZiCQ0VJwewfrSV43BOrLETM="
+            alt="profile picture"
+          />
+        </div>
+
+        <div class="userDetailsContainer">
+          <div>
+            <p>
+              <span>First name</span> <br />
+              {{ firstName }}
+            </p>
+            <br />
+
+            <p>
+              <span>Email</span> <br />
+              {{ email }}
+            </p>
+          </div>
+          <br />
+
+          <div>
+            <p>
+              <span>Last name</span> <br />
+              {{ lastName }}
+            </p>
+
+            <br />
+            <p>
+              <span>Phone number</span> <br />
+              {{ phoneNumber }}
+            </p>
+          </div>
+          <br />
+
+          <!-- <h4>Edit details</h4> -->
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -39,8 +83,6 @@ export default {
       showModal: false,
       isLoading: true,
       isSubmitting: false,
-
-      planID: "",
 
       userPlans: [],
     };
@@ -151,5 +193,44 @@ export default {
   width: 30px;
   height: 30px;
   object-fit: cover;
+}
+.profileImageContainer {
+  margin: 0 40px 0 0;
+}
+.profileImageContainer img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+.detailsContainer {
+  display: flex;
+  flex-direction: row;
+  margin: 40px 0;
+  justify-content: space-between;
+}
+.userDetailsContainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+.userDetailsContainer div {
+  margin: 0 40px 0 0;
+}
+.userDetailsContainer p {
+  font-weight: 800;
+  color: #006b4d;
+  font-size: 18px;
+  padding: 20px;
+  width: 200px;
+  background: #effffb;
+  border-radius: 10px;
+  /* border: solid 1px rgb(248, 255, 250); */
+  box-shadow: #dbdbdb 2px 2px 2px;
+}
+.userDetailsContainer span {
+  font-weight: 600;
+  color: #7bcab4;
+  font-size: 16px;
 }
 </style>

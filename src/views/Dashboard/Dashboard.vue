@@ -66,7 +66,8 @@
             class="planItem"
           >
             <p class="planName">
-              {{ userPlan.plan.investmentPlanName }}
+              {{ userPlan.plan.investmentPlanName }} <br />
+              <span>{{ userPlan.userPlanID }}</span>
             </p>
 
             <div class="extraDetails">
@@ -133,8 +134,43 @@
 
       <div class="previousTransactionsContainer">
         <div class="combText">
-          <p class="subHeading">Your previous transactions</p>
-          <!-- <router-link>View all</router-link> -->
+          <p class="subHeading">Your previous payments</p>
+          <router-link to="/dashboard" class="viewAll">View all</router-link>
+        </div>
+
+        <div class="paymentContainer">
+          <div
+            v-for="paymentItem in userPayments"
+            :key="paymentItem._id"
+            class="paymentItem"
+          >
+            <div class="extraDetails">
+              <p class="keyNames recNames">
+                <span>Amount paid</span> KSH.
+                {{ paymentItem.amountPaid.toFixed(2) }}
+              </p>
+
+              <p class="keyNames recNames">
+                <span>Date of payment</span>
+                {{ getFormatedDateTime(paymentItem.dateOfPayment) }}
+              </p>
+
+              <p class="keyNames recNames">
+                <span>M-PESA code</span>
+                {{ paymentItem.mpesaCode }}
+              </p>
+
+              <p class="keyNames recNames">
+                <span>Plan paid for</span>
+                {{ paymentItem.userPlan.plan.investmentPlanName }}
+              </p>
+
+              <p class="keyNames recNames">
+                <span>Plan ID</span>
+                {{ paymentItem.userPlan.userPlanID }}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -170,6 +206,7 @@ export default {
       paymentMessage: false,
 
       userPlans: [],
+      userPayments: [],
     };
   },
   methods: {
@@ -178,6 +215,9 @@ export default {
     },
     getTodayDate() {
       return moment().format("MMM Do YYYY");
+    },
+    getFormatedDateTime(date) {
+      return moment(date).format("MMM Do YYYY, h:mm a");
     },
     setShowModal({ planID }) {
       this.showModal = true;
@@ -195,8 +235,6 @@ export default {
         })
         .then((response) => {
           this.isSubmitting = false;
-          this.planID = "";
-          this.amount = "";
 
           console.log(response.data);
 
@@ -293,6 +331,21 @@ export default {
         this.isLoading = false;
         console.log(err);
       });
+
+    await axios
+      .get(
+        `http://localhost:3000/api/user/payments/get-user-payments/${localStorage.getItem(
+          "userID"
+        )}`
+      )
+      .then((response) => {
+        console.log(response.data);
+        this.userPayments = response.data;
+      })
+      .catch((err) => {
+        this.isLoading = false;
+        console.log(err);
+      });
   },
 };
 </script>
@@ -375,6 +428,9 @@ export default {
   margin: 10px 0;
   font-size: 16px;
 }
+.planName span {
+  color: #858585;
+}
 .planItem {
   width: 20%;
   background: linear-gradient(
@@ -455,5 +511,37 @@ export default {
 .checkPayModal h2 {
   color: white;
   font-weight: 800;
+}
+.previousTransactionsContainer {
+  width: 100%;
+}
+.paymentContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  overflow-y: hidden;
+  overflow-x: scroll;
+  -webkit-overflow-scrolling: touch;
+  white-space: nowrap;
+  position: relative;
+  margin: 20px 0 0 0;
+  padding: 20px 0;
+  width: 100%;
+}
+.paymentItem {
+  background: linear-gradient(
+    146.03deg,
+    #091e18 13.77%,
+    rgba(159, 184, 176, 0) 148.56%
+  );
+  filter: drop-shadow(2px 2px 4px #000000);
+  margin: 0 20px 0 0;
+  border-radius: 10px;
+  width: 500px;
+  padding: 20px 40px;
+}
+.recNames span {
+  margin: 0 40px 0 0;
 }
 </style>
