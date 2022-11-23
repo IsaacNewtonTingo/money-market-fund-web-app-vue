@@ -37,12 +37,8 @@
       </div>
 
       <div class="linky">
-        <router-link :to="{ name: 'settings' }">Settings</router-link>
+        <router-link :to="{ name: 'settings' }">Logout</router-link>
       </div>
-
-      <!-- <div class="linky">
-        <router-link to="/dashboard">Logout</router-link>
-      </div> -->
     </nav>
   </div>
 </template>

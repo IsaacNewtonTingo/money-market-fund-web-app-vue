@@ -1,42 +1,46 @@
 <template>
-  <!-- <TopNav /> -->
+  <TopNav />
 
-  <div class="main">
-    <div class="leftItem"></div>
+  <div class="signContainer">
+    <form @submit.prevent="handleLogin">
+      <label for="">Email</label>
+      <input
+        type="email"
+        name="email"
+        required
+        v-model="email"
+        placeholder="e.g johndoe@gmail.com"
+      />
 
-    <div class="rightItem">
-      <form @submit.prevent="handleLogin">
-        <label for="">Email</label>
-        <input
-          type="email"
-          name="email"
-          required
-          v-model="email"
-          placeholder="e.g johndoe@gmail.com"
+      <label for="">Password</label>
+      <input
+        type="password"
+        name="password"
+        required
+        v-model="password"
+        placeholder="********"
+      />
+
+      <button :disabled="isSubmitting" class="depositBTN">
+        <img
+          class="loadingGif"
+          v-if="isSubmitting"
+          src="../../assets/loading.gif"
+          alt=""
         />
-
-        <label for="">Password</label>
-        <input
-          type="password"
-          name="password"
-          required
-          v-model="password"
-          placeholder="********"
-        />
-
-        <button>Login</button>
-      </form>
+        <div v-else>Deposit</div>
+      </button>
 
       <div class="dontHaveAccount">
         <p>Don't have an account?</p>
         <router-link :to="{ name: 'signup' }">Signup</router-link>
       </div>
-    </div>
+    </form>
   </div>
 </template>
 
 <script>
-import TopNav from "@/components/TopNav.vue";
+import TopNav from "../../components/TopNav.vue";
 import axios from "axios";
 
 export default {
@@ -47,10 +51,13 @@ export default {
       email: "",
       password: "",
       userID: "",
+
+      isSubmitting: false,
     };
   },
   methods: {
     async handleLogin() {
+      this.isSubmitting = true;
       await axios
         .post("http://localhost:3000/api/user/signin", {
           email: this.email,
@@ -58,6 +65,7 @@ export default {
         })
         .then((response) => {
           console.log(response.data);
+          this.isSubmitting = false;
 
           if (response.data.status === "Success") {
             this.userID = response.data.data[0]._id;
@@ -67,6 +75,10 @@ export default {
           } else {
             console.log(response.data.message);
           }
+        })
+        .catch((err) => {
+          console.log(err);
+          this.isSubmitting = false;
         });
     },
   },
@@ -74,31 +86,31 @@ export default {
 </script>
 
 <style>
-.main {
+.signContainer {
+  width: 100%;
   padding: 40px;
   display: flex;
-  background: #f0fff2;
-  flex: 1;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-image: linear-gradient(
+    rgb(248, 255, 250),
+    rgb(206, 255, 234),
+    rgb(248, 255, 250)
+  );
 }
-.leftItem {
-  width: 40%;
-}
-.rightItem {
-  width: 40%;
+form {
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  width: 30%;
   background: linear-gradient(
     146.03deg,
     #091e18 13.77%,
     rgba(159, 184, 176, 0) 148.56%
   );
   filter: drop-shadow(2px 2px 4px #000000);
-  border-radius: 20px;
   padding: 40px;
-}
-form {
-  display: flex;
-  flex-direction: column;
-  border-radius: 20px;
 }
 label {
   color: white;
