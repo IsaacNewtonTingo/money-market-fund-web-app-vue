@@ -80,6 +80,8 @@ export default {
 
 nav a {
   color: #00381f;
+  text-decoration: none;
+  font-weight: 800;
 }
 
 nav a.router-link-exact-active {

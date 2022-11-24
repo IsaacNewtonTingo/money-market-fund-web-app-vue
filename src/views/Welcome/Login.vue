@@ -2,7 +2,7 @@
   <TopNav />
 
   <div class="signContainer">
-    <form @submit.prevent="handleLogin">
+    <form class="logForm" @submit.prevent="handleLogin">
       <label for="">Email</label>
       <input
         type="email"
@@ -87,7 +87,6 @@ export default {
 
 <style>
 .signContainer {
-  width: 100%;
   padding: 40px;
   display: flex;
   align-items: center;
@@ -99,7 +98,7 @@ export default {
     rgb(248, 255, 250)
   );
 }
-form {
+.logForm {
   display: flex;
   flex-direction: column;
   border-radius: 20px;
