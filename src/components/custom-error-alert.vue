@@ -10,7 +10,15 @@
   <script>
 export default {
   name: "ErrorAlert",
-  props: "errorMessage",
+  props: ["errorMessage"],
+  mounted() {
+    setTimeout(() => {
+      let newMessage = this.errorMessage;
+      newMessage = "";
+
+      this.$emit("update-error-message", newMessage);
+    }, 5000);
+  },
 };
 </script>
   
@@ -25,6 +33,8 @@ export default {
   padding: 20px;
   border-radius: 10px;
   margin: 20px 20px 0 0;
+  z-index: 2;
+  width: 200px;
 }
 .customErrorAlert p {
   font-size: 10px;

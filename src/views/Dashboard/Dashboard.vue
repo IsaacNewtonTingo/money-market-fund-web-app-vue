@@ -50,8 +50,16 @@
       </div>
     </div>
 
-    <ErrorAlert v-if="errorMessage" :errorMessage="errorMessage" />
-    <SuccessAlert v-if="successMessage" :successMessage="successMessage" />
+    <ErrorAlert
+      v-if="errorMessage"
+      :errorMessage="errorMessage"
+      @update-error-message="updateErrorMessage"
+    />
+    <SuccessAlert
+      v-if="successMessage"
+      :successMessage="successMessage"
+      @update-success-message="updateSuccessMessage"
+    />
 
     <div class="rightItems">
       <h1 class="heading">Hello {{ firstName }} {{ lastName }}</h1>
@@ -219,6 +227,62 @@ export default {
     };
   },
   methods: {
+    async getUserProfile() {
+      await axios
+        .get(
+          `http://localhost:3000/api/user/get-user-profile/${localStorage.getItem(
+            "userID"
+          )}`
+        )
+        .then((response) => {
+          if (response.data) {
+            this.firstName = response.data.firstName;
+            this.lastName = response.data.lastName;
+            this.email = response.data.email;
+            this.phoneNumber = response.data.phoneNumber;
+          } else {
+            console.log(response.data.message);
+          }
+        })
+        .catch((err) => {
+          this.isLoading = false;
+          console.log(err);
+        });
+    },
+
+    async getUserPlans() {
+      await axios
+        .get(
+          `http://localhost:3000/api/user/user-plans/get-my-plans/${localStorage.getItem(
+            "userID"
+          )}`
+        )
+        .then((response) => {
+          this.userPlans = response.data;
+          this.isLoading = false;
+        })
+        .catch((err) => {
+          this.isLoading = false;
+          console.log(err);
+        });
+    },
+
+    async getUserPayments() {
+      await axios
+        .get(
+          `http://localhost:3000/api/user/payments/get-user-payments/${localStorage.getItem(
+            "userID"
+          )}`
+        )
+        .then((response) => {
+          this.userPayments = response.data;
+        })
+        .catch((err) => {
+          this.isLoading = false;
+          console.log(err);
+        });
+    },
+
     getMaturityDate(date) {
       return moment(date).format("MMM Do YYYY");
     },
@@ -232,6 +296,12 @@ export default {
       this.showModal = true;
       this.showPayForm = true;
       this.planID = planID;
+    },
+    updateSuccessMessage(successMessage) {
+      this.successMessage = successMessage;
+    },
+    updateErrorMessage(errorMessage) {
+      this.errorMessage = errorMessage;
     },
     async depositFunds() {
       this.isSubmitting = true;
@@ -247,116 +317,32 @@ export default {
 
           console.log(response.data);
 
-          if (response.data.ResponseCode === "0") {
+          if (response.data.status === "Success") {
             //stk push sent
-            alert(
-              `${response.data.ResponseDescription}. Please check your phone for an M-PESA prompt to complete transaction.`
-            );
-            const CheckoutRequestID = response.data.CheckoutRequestID;
 
-            this.checkPaymentModal = true;
-            this.showPayForm = false;
-            this.checkPayment({ CheckoutRequestID });
+            this.successMessage = `${response.data.message}`;
+            this.showModal = false;
+
+            this.$router.push("Profile");
           } else {
             //some error has occured
             console.log("An error occured");
+            this.errorMessage =
+              "An error occured while trying to initiate M-PESA prompt. Please try again later";
           }
         })
         .catch((err) => {
           this.isSubmitting = false;
           console.log(err);
+          this.errorMessage =
+            "An error occured while trying to process your payment. Please try again later or contact support";
         });
-    },
-    async checkPayment({ CheckoutRequestID }) {
-      const timeout = setTimeout(function () {
-        clearInterval(interval);
-        this.checkPaymentModal = false;
-        this.showModal = false;
-
-        if (!this.paymentMessage) {
-          console.log("Payment wasn't made");
-        } else {
-          this.paymentMessage = false;
-        }
-      }, 30000);
-
-      const interval = setInterval(async function () {
-        await axios
-          .post(
-            `http://localhost:3000/api/user/payments/check-payment-status`,
-            {
-              CheckoutRequestID,
-            }
-          )
-          .then((response) => {
-            console.log(response.data);
-            if (response.data.status === "Success") {
-              clearInterval(interval);
-              clearTimeout(timeout);
-
-              this.paymentMessage = true;
-              console.log("Payment made successfully");
-              // alert("Payment made successfully");
-              this.checkPaymentModal = false;
-              this.showModal = false;
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }, 1000);
     },
   },
   async mounted() {
-    await axios
-      .get(
-        `http://localhost:3000/api/user/get-user-profile/${localStorage.getItem(
-          "userID"
-        )}`
-      )
-      .then((response) => {
-        if (response.data) {
-          this.firstName = response.data.firstName;
-          this.lastName = response.data.lastName;
-          this.email = response.data.email;
-          this.phoneNumber = response.data.phoneNumber;
-        } else {
-          console.log(response.data.message);
-        }
-      })
-      .catch((err) => {
-        this.isLoading = false;
-        console.log(err);
-      });
-
-    await axios
-      .get(
-        `http://localhost:3000/api/user/user-plans/get-my-plans/${localStorage.getItem(
-          "userID"
-        )}`
-      )
-      .then((response) => {
-        this.userPlans = response.data;
-        this.isLoading = false;
-      })
-      .catch((err) => {
-        this.isLoading = false;
-        console.log(err);
-      });
-
-    await axios
-      .get(
-        `http://localhost:3000/api/user/payments/get-user-payments/${localStorage.getItem(
-          "userID"
-        )}`
-      )
-      .then((response) => {
-        this.userPayments = response.data;
-      })
-      .catch((err) => {
-        this.isLoading = false;
-        console.log(err);
-      });
+    this.getUserProfile();
+    this.getUserPlans();
+    this.getUserPayments();
   },
 };
 </script>
