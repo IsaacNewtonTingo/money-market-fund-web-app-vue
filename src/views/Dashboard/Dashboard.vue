@@ -50,6 +50,9 @@
       </div>
     </div>
 
+    <ErrorAlert v-if="errorMessage" :errorMessage="errorMessage" />
+    <SuccessAlert v-if="successMessage" :successMessage="successMessage" />
+
     <div class="rightItems">
       <h1 class="heading">Hello {{ firstName }} {{ lastName }}</h1>
 
@@ -179,12 +182,15 @@
 
 <script>
 import LeftFloat from "@/components/leftFloat.vue";
+import ErrorAlert from "@/components/custom-error-alert.vue";
+import SuccessAlert from "@/components/custom-success-alert.vue";
+
 import axios from "axios";
 import moment from "moment";
 
 export default {
   name: "Dashboard",
-  components: { LeftFloat },
+  components: { LeftFloat, ErrorAlert, SuccessAlert },
   data() {
     return {
       userID: localStorage.getItem("userID"),
@@ -207,6 +213,9 @@ export default {
 
       userPlans: [],
       userPayments: [],
+
+      errorMessage: "",
+      successMessage: "",
     };
   },
   methods: {

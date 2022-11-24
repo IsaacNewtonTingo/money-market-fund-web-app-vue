@@ -71,6 +71,8 @@ export default {
             this.userID = response.data.data[0]._id;
             this.$router.push("Dashboard");
 
+            (this.email = ""), (this.password = "");
+
             localStorage.setItem("userID", response.data.data[0]._id);
           } else {
             console.log(response.data.message);
