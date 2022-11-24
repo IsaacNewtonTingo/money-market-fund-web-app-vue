@@ -14,7 +14,7 @@
 
     <div v-if="showModal" class="modalContainer">
       <div v-if="showPayForm" class="innerModal">
-        <form @submit.prevent="depositFunds">
+        <form class="payForm" @submit.prevent="depositFunds">
           <label for="">Phone number</label>
           <input
             type="tel"
@@ -40,14 +40,14 @@
         </form>
       </div>
 
-      <!-- <div v-if="checkPaymentModal" class="checkPayModal">
+      <div v-if="checkPaymentModal" class="checkPayModal">
         <h2>Checking payment</h2>
         <img src="../../assets/loading.gif" alt="" />
       </div>
 
       <div v-if="paymentMessage" class="checkPayModal">
         <h2>Payment made successfully</h2>
-      </div> -->
+      </div>
     </div>
 
     <div class="rightItems">
@@ -245,9 +245,9 @@ export default {
             );
             const CheckoutRequestID = response.data.CheckoutRequestID;
 
-            // this.checkPaymentModal = true;
-            // this.showPayForm = false;
-            // this.checkPayment({ CheckoutRequestID });
+            this.checkPaymentModal = true;
+            this.showPayForm = false;
+            this.checkPayment({ CheckoutRequestID });
           } else {
             //some error has occured
             console.log("An error occured");
@@ -259,7 +259,19 @@ export default {
         });
     },
     async checkPayment({ CheckoutRequestID }) {
-      var timerID = setInterval(async function () {
+      const timeout = setTimeout(function () {
+        clearInterval(interval);
+        this.checkPaymentModal = false;
+        this.showModal = false;
+
+        if (!this.paymentMessage) {
+          console.log("Payment wasn't made");
+        } else {
+          this.paymentMessage = false;
+        }
+      }, 30000);
+
+      const interval = setInterval(async function () {
         await axios
           .post(
             `http://localhost:3000/api/user/payments/check-payment-status`,
@@ -270,29 +282,20 @@ export default {
           .then((response) => {
             console.log(response.data);
             if (response.data.status === "Success") {
-              clearInterval(timerID);
+              clearInterval(interval);
               clearTimeout(timeout);
 
               this.paymentMessage = true;
               console.log("Payment made successfully");
+              // alert("Payment made successfully");
               this.checkPaymentModal = false;
+              this.showModal = false;
             }
           })
           .catch((err) => {
             console.log(err);
           });
       }, 1000);
-
-      const timeout = setTimeout(function () {
-        clearInterval(timerID);
-        this.checkPaymentModal = false;
-
-        if (!this.paymentMessage) {
-          console.log("Payment wasn't made");
-        } else {
-          this.paymentMessage = false;
-        }
-      }, 30000);
     },
   },
   async mounted() {
@@ -339,7 +342,6 @@ export default {
         )}`
       )
       .then((response) => {
-        console.log(response.data);
         this.userPayments = response.data;
       })
       .catch((err) => {
@@ -368,6 +370,10 @@ export default {
   align-items: center;
   justify-content: center;
   right: 20px;
+}
+.payForm {
+  display: flex;
+  flex-direction: column;
 }
 .loadingScreen {
   display: flex;

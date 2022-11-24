@@ -30,7 +30,7 @@ export default {
 
 <style>
 .topNav {
-  padding: 20px;
+  padding: 10px 20px;
   background: rgb(36, 55, 48);
   display: flex;
   justify-content: space-between;
@@ -56,7 +56,7 @@ export default {
 .signBTN {
   width: 100px;
   margin: 0;
-  height: 50px;
+  height: 40px;
   font-size: 10px;
 }
 .logBTN {
@@ -64,7 +64,7 @@ export default {
   width: 100px;
   background: none;
   border: solid rgb(0, 182, 134) 2px;
-  height: 50px;
+  height: 40px;
   font-size: 10px;
 }
 </style>
