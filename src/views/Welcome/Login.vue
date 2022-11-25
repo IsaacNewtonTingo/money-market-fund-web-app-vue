@@ -41,12 +41,17 @@
           src="../../assets/loading.gif"
           alt=""
         />
-        <div v-else>Deposit</div>
+        <div v-else>Login</div>
       </button>
 
       <div class="dontHaveAccount">
         <p>Don't have an account?</p>
         <router-link :to="{ name: 'signup' }">Signup</router-link>
+      </div>
+
+      <div class="forgot">
+        <p>Forgot password?</p>
+        <router-link :to="{ name: 'resetPassword' }">Reset</router-link>
       </div>
     </form>
   </div>
@@ -168,11 +173,28 @@ button {
   justify-content: center;
   margin: 20px;
 }
+.forgot {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
 .dontHaveAccount p {
   color: white;
   text-align: center;
 }
 .dontHaveAccount a {
+  color: tomato;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.forgot p {
+  color: white;
+  text-align: center;
+}
+.forgot a {
   color: tomato;
   font-weight: bold;
   margin-left: 10px;
