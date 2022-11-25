@@ -1,21 +1,35 @@
 <template>
   <TopNav />
 
+  <ErrorAlert
+    v-if="errorMessage"
+    :errorMessage="errorMessage"
+    @update-error-message="updateErrorMessage"
+  />
+
+  <SuccessAlert
+    v-if="successMessage"
+    :successMessage="successMessage"
+    @update-success-message="updateSuccessMessage"
+  />
+
   <div v-if="showModal" class="codeModal">
     <form class="codeForm" @submit.prevent="confirmCode">
       <div class="mailAndText">
         <img src="../../assets/mail.png" alt="" />
         <h1>Confirm your email address</h1>
       </div>
+
       <p>
         If the email address belongs to you, please check your inbox for a 4
         digit code sent to <span>{{ this.email }}</span> you and confirm it
         here.
       </p>
+
       <label for="">Confirmation code</label>
       <input v-model="code" type="text" placeholder="e.g 3465" />
 
-      <button :disabled="isSubmitting" class="depositBTN">
+      <button :disabled="isSubmitting" class="confirmCedeBTN">
         <img
           class="loadingGif"
           v-if="isSubmitting"
@@ -28,61 +42,79 @@
   </div>
 
   <div class="formsCont">
+    <img class="signIMG" src="../../assets/money5.png" alt="" />
     <form class="signContainerForm" @submit.prevent="handleSignUp">
-      <label for="">First Name</label>
-      <input
-        type="text"
-        name="firstName"
-        required
-        v-model="firstName"
-        placeholder="e.g John"
-      />
+      <div class="combineInputs">
+        <div class="inputsContainer">
+          <label for="">First Name</label>
+          <input
+            type="text"
+            name="firstName"
+            required
+            v-model="firstName"
+            placeholder="e.g John"
+          />
+        </div>
 
-      <label for="">Last name</label>
-      <input
-        type="text"
-        name="lastName"
-        required
-        v-model="lastName"
-        placeholder="e.g Doe"
-      />
+        <div class="inputsContainer">
+          <label for="">Last name</label>
+          <input
+            type="text"
+            name="lastName"
+            required
+            v-model="lastName"
+            placeholder="e.g Doe"
+          />
+        </div>
+      </div>
 
-      <label for="">Email</label>
-      <input
-        type="email"
-        name="email"
-        required
-        v-model="email"
-        placeholder="e.g johndoe@gmail.com"
-      />
+      <div class="combineInputs">
+        <div class="inputsContainer">
+          <label for="">Email</label>
+          <input
+            type="email"
+            name="email"
+            required
+            v-model="email"
+            placeholder="e.g johndoe@gmail.com"
+          />
+        </div>
 
-      <label for="">Phone number</label>
-      <input
-        type="tel"
-        name="phoneNumber"
-        required
-        v-model="phoneNumber"
-        placeholder="e.g 254724753175"
-      />
+        <div class="inputsContainer">
+          <label for="">Phone number</label>
+          <input
+            type="tel"
+            name="phoneNumber"
+            required
+            v-model="phoneNumber"
+            placeholder="e.g 254724753175"
+          />
+        </div>
+      </div>
 
-      <label for="">Password</label>
-      <input
-        type="password"
-        name="password"
-        required
-        v-model="password"
-        placeholder="********"
-      />
+      <div class="combineInputs">
+        <div class="inputsContainer">
+          <label for="">Password</label>
+          <input
+            type="password"
+            name="password"
+            required
+            v-model="password"
+            placeholder="********"
+          />
+        </div>
 
-      <label for="">Confirm password</label>
-      <input
-        type="password"
-        name="confirmPassword"
-        required
-        v-model="confirmPassword"
-        placeholder="********"
-      />
-
+        <div class="inputsContainer">
+          <label for="">Confirm password</label>
+          <input
+            type="password"
+            name="confirmPassword"
+            required
+            v-model="confirmPassword"
+            placeholder="********"
+          />
+        </div>
+      </div>
       <button :disabled="isSubmitting" class="depositBTN">
         <img
           class="loadingGif"
@@ -104,10 +136,12 @@
 <script>
 import TopNav from "../../components/TopNav.vue";
 import axios from "axios";
+import ErrorAlert from "@/components/custom-error-alert.vue";
+import SuccessAlert from "@/components/custom-success-alert.vue";
 
 export default {
   name: "Signup",
-  components: { TopNav },
+  components: { TopNav, ErrorAlert, SuccessAlert },
   data() {
     return {
       firstName: "",
@@ -122,6 +156,9 @@ export default {
       showModal: false,
 
       code: "",
+
+      errorMessage: "",
+      successMessage: "",
     };
   },
   methods: {
@@ -137,43 +174,62 @@ export default {
           password: this.password,
         })
         .then((response) => {
-          console.log(response.data);
           this.isSubmitting = false;
 
+          (this.firstName = ""),
+            (this.lastName = ""),
+            (this.email = ""),
+            (this.phoneNumber = ""),
+            (this.password = ""),
+            (this.confirmPassword = "");
+
           if (response.data.status === "Pending") {
+            this.successMessage = response.data.message;
             this.showModal = true;
             this.userID = response.data.data;
           } else {
-            console.log(response.data.message);
+            this.errorMessage = response.data.message;
           }
         })
         .catch((err) => {
-          console.log(err);
           this.isSubmitting = false;
+          this.errorMessage = err;
+
+          (this.firstName = ""),
+            (this.lastName = ""),
+            (this.email = ""),
+            (this.phoneNumber = ""),
+            (this.password = ""),
+            (this.confirmPassword = "");
         });
     },
     async confirmCode() {
       this.isSubmitting = true;
-      console.log("Clicked");
       await axios
         .post(`http://localhost:3000/api/user/verify-email/${this.userID}`, {
           confirmationCode: this.code,
         })
         .then((response) => {
-          console.log(response.data);
           this.isSubmitting = false;
-
-          if (response.data.status == "Success") {
-            alert(response.data.message);
-            this.$router.push("Login");
+          if (response.data.status === "Success") {
+            this.successMessage = response.data.message;
+            this.showModal = false;
+            // this.$router.push("Login");
           } else {
-            alert(response.data.message);
+            this.errorMessage = response.data.message;
           }
         })
         .catch((err) => {
-          console.log(err);
+          this.errorMessage = err;
           this.isSubmitting = false;
         });
+    },
+
+    updateSuccessMessage(successMessage) {
+      this.successMessage = successMessage;
+    },
+    updateErrorMessage(errorMessage) {
+      this.errorMessage = errorMessage;
     },
   },
 };
@@ -189,13 +245,17 @@ export default {
     rgb(206, 255, 234),
     rgb(248, 255, 250)
   );
+  margin: 0 0 100px 0;
+}
+.formsCont img {
+  width: 45%;
 }
 .signContainerForm {
   display: flex;
   text-align: center;
   flex-direction: column;
   border-radius: 20px;
-  width: 30%;
+  width: 35%;
   background: linear-gradient(
     146.03deg,
     #091e18 13.77%,
@@ -205,16 +265,27 @@ export default {
   padding: 40px;
   margin: 0;
 }
+.combineInputs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.inputsContainer {
+  display: flex;
+  flex-direction: column;
+}
 label {
   color: white;
   font-weight: 700;
   text-align: left;
 }
-input {
+.formsCont input {
   height: 50px;
   border-radius: 10px;
   margin: 20px 0;
   padding: 0 30px;
+  width: 70%;
 }
 button {
   height: 50px;
@@ -253,13 +324,19 @@ button {
   align-items: center;
   justify-content: center;
 }
-.loadingGif {
-  width: 30px;
-  height: 30px;
-  object-fit: cover;
-}
+
 .codeForm {
   width: 30%;
+  border-radius: 20px;
+  background: linear-gradient(
+    146.03deg,
+    #091e18 13.77%,
+    rgba(159, 184, 176, 0) 148.56%
+  );
+  filter: drop-shadow(2px 2px 4px #000000);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
 }
 .codeForm p {
   color: #b0ffe9;
@@ -291,5 +368,10 @@ button {
 .mailAndText h1 {
   color: white;
   margin: 0 0 0 40px;
+}
+.depositBTN img,
+.confirmCedeBTN img {
+  width: 30px;
+  height: 30px;
 }
 </style>

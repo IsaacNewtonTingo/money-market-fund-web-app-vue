@@ -322,8 +322,6 @@ export default {
 
             this.successMessage = `${response.data.message}`;
             this.showModal = false;
-
-            this.$router.push("Profile");
           } else {
             //some error has occured
             console.log("An error occured");

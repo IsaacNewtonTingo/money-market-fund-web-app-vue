@@ -1,7 +1,20 @@
 <template>
   <TopNav />
 
+  <ErrorAlert
+    v-if="errorMessage"
+    :errorMessage="errorMessage"
+    @update-error-message="updateErrorMessage"
+  />
+
+  <SuccessAlert
+    v-if="successMessage"
+    :successMessage="successMessage"
+    @update-success-message="updateSuccessMessage"
+  />
+
   <div class="signContainer">
+    <img class="logIMG" src="../../assets/money3.png" alt="" />
     <form class="logForm" @submit.prevent="handleLogin">
       <label for="">Email</label>
       <input
@@ -42,10 +55,12 @@
 <script>
 import TopNav from "../../components/TopNav.vue";
 import axios from "axios";
+import ErrorAlert from "@/components/custom-error-alert.vue";
+import SuccessAlert from "@/components/custom-success-alert.vue";
 
 export default {
   name: "Login",
-  components: { TopNav },
+  components: { TopNav, ErrorAlert, SuccessAlert },
   data() {
     return {
       email: "",
@@ -53,6 +68,9 @@ export default {
       userID: "",
 
       isSubmitting: false,
+
+      errorMessage: "",
+      successMessage: "",
     };
   },
   methods: {
@@ -75,13 +93,19 @@ export default {
 
             localStorage.setItem("userID", response.data.data[0]._id);
           } else {
-            console.log(response.data.message);
+            this.errorMessage(response.data.message);
           }
         })
         .catch((err) => {
-          console.log(err);
+          this.errorMessage(err);
           this.isSubmitting = false;
         });
+    },
+    updateSuccessMessage(successMessage) {
+      this.successMessage = successMessage;
+    },
+    updateErrorMessage(errorMessage) {
+      this.errorMessage = errorMessage;
     },
   },
 };
@@ -92,13 +116,16 @@ export default {
   padding: 40px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-direction: column;
+  justify-content: space-around;
+  flex-direction: row;
   background-image: linear-gradient(
     rgb(248, 255, 250),
     rgb(206, 255, 234),
     rgb(248, 255, 250)
   );
+}
+.logIMG {
+  width: 30%;
 }
 .logForm {
   display: flex;
