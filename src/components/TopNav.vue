@@ -4,9 +4,9 @@
 
     <div class="rightItemsNav">
       <router-link to="/">Home</router-link>
-      <router-link :to="{ name: 'signup' }">About us</router-link>
-      <router-link :to="{ name: 'signup' }">Plans</router-link>
-      <router-link :to="{ name: 'signup' }">Contact us</router-link>
+      <router-link :to="{ name: 'aboutUs' }">About us</router-link>
+      <router-link :to="{ name: 'plans' }">Plans</router-link>
+      <router-link :to="{ name: 'contactUs' }">Contact us</router-link>
 
       <button @click="goToSignIn" class="logBTN">Login</button>
       <button @click="goToSignUp" class="signBTN">Signup</button>

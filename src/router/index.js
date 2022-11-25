@@ -2,6 +2,11 @@ import { createRouter, createWebHistory } from "vue-router";
 import Landing from "../views/Welcome/Landing.vue";
 import Login from "../views/Welcome/Login.vue";
 import Signup from "../views/Welcome/Signup.vue";
+
+import AboutUs from "../views/Welcome/about.vue";
+import Plans from "../views/Welcome/plans.vue";
+import ContactUs from "../views/Welcome/contact-us.vue";
+
 import Dashboard from "../views/Dashboard/Dashboard.vue";
 import AllUserPlans from "../views/Dashboard/All-user-plans.vue";
 import MyTransactions from "../views/Dashboard/my-transactions.vue";
@@ -26,6 +31,24 @@ const routes = [
     path: "/signup",
     name: "signup",
     component: Signup,
+  },
+
+  {
+    path: "/about-us",
+    name: "aboutUs",
+    component: AboutUs,
+  },
+
+  {
+    path: "/contact-us",
+    name: "contactUs",
+    component: ContactUs,
+  },
+
+  {
+    path: "/plans",
+    name: "plans",
+    component: Plans,
   },
 
   {

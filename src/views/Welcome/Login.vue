@@ -93,7 +93,7 @@ export default {
 
             localStorage.setItem("userID", response.data.data[0]._id);
           } else {
-            this.errorMessage(response.data.message);
+            this.errorMessage = response.data.message;
           }
         })
         .catch((err) => {
