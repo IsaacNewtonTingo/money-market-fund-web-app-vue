@@ -76,12 +76,12 @@
             </p>
 
             <div class="extraDetails">
-              <p class="keyNames">
+              <p class="keyNamesItems">
                 <span>Amount deposited</span> KSH.
                 {{ userPlan.amountAvailable.toFixed(2) }}
               </p>
 
-              <p class="keyNames">
+              <p class="keyNamesItems">
                 <span>Expected interest</span> KSH.
                 {{
                   (
@@ -91,7 +91,7 @@
                 }}
               </p>
 
-              <p class="keyNames">
+              <p class="keyNamesItems">
                 <span>Expected income</span> KSH.
                 {{
                   (
@@ -102,7 +102,7 @@
                 }}
               </p>
 
-              <p class="keyNames">
+              <p class="keyNamesItems">
                 <span>Maturity date</span>
                 {{
                   userPlan.maturityDate != null
@@ -154,27 +154,27 @@
             class="paymentItem"
           >
             <div class="extraDetails">
-              <p class="keyNames recNames">
+              <p class="keyNamesItems recNames">
                 <span>Amount paid</span> KSH.
                 {{ paymentItem.amountPaid.toFixed(2) }}
               </p>
 
-              <p class="keyNames recNames">
+              <p class="keyNamesItems recNames">
                 <span>Date of payment</span>
                 {{ getFormatedDateTime(paymentItem.dateOfPayment) }}
               </p>
 
-              <p class="keyNames recNames">
+              <p class="keyNamesItems recNames">
                 <span>M-PESA code</span>
                 {{ paymentItem.mpesaCode }}
               </p>
 
-              <p class="keyNames recNames">
+              <p class="keyNamesItems recNames">
                 <span>Plan paid for</span>
                 {{ paymentItem.userPlan.plan.investmentPlanName }}
               </p>
 
-              <p class="keyNames recNames">
+              <p class="keyNamesItems recNames">
                 <span>Plan ID</span>
                 {{ paymentItem.userPlan.userPlanID }}
               </p>
@@ -456,7 +456,7 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  height: 400px;
+  height: 350px;
   margin: 0 0 40px 0;
 }
 .btns {
@@ -475,16 +475,16 @@ export default {
   height: 30px;
   object-fit: cover;
 }
-.keyNames {
+.keyNamesItems {
   color: rgb(235, 235, 235);
   font-weight: 600;
   font-size: 10px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 0 10px;
+  width: 100%;
 }
-.keyNames span {
+.keyNamesItems span {
   color: #9a9a9a;
 }
 .extraDetails {
