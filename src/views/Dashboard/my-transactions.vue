@@ -10,117 +10,6 @@
       :email="email"
       :phoneNumber="phoneNumber"
     />
-
-    <div v-if="showModal" class="modalContainer">
-      <div class="innerModal">
-        <form @submit.prevent="depositFunds">
-          <label for="">Phone number</label>
-          <input
-            type="tel"
-            placeholder="e.g 254724753175"
-            v-model="this.phoneNumber"
-          />
-
-          <label for="">Amount</label>
-          <input v-model="this.amount" type="number" placeholder="e.g 2000" />
-
-          <button :disabled="isSubmitting" class="depositBTN">
-            <img
-              class="loadingGif"
-              v-if="isSubmitting"
-              src="../../assets/loading.gif"
-              alt=""
-            />
-            <div v-else>Deposit</div>
-          </button>
-          <button @click="this.showModal = false" class="withdrawBTN">
-            Cancel
-          </button>
-        </form>
-      </div>
-    </div>
-
-    <div class="rightItems">
-      <h1 class="heading">Hello {{ firstName }} {{ lastName }}</h1>
-
-      <div class="savingsPlans">
-        <div class="combText">
-          <p class="subHeading">Your savings plans</p>
-          <router-link to="/dashboard" class="viewAll">View all</router-link>
-        </div>
-
-        <div class="planContainer">
-          <div
-            v-for="userPlan in userPlans"
-            :key="userPlan._id"
-            class="planItem"
-          >
-            <p class="planName">
-              {{ userPlan.plan.investmentPlanName }}
-            </p>
-
-            <div class="extraDetails">
-              <p class="keyNames">
-                <span>Amount deposited</span> KSH.
-                {{ userPlan.amountAvailable.toFixed(2) }}
-              </p>
-
-              <p class="keyNames">
-                <span>Expected interest</span> KSH.
-                {{
-                  (
-                    (userPlan.plan.interestRate / 100) *
-                    userPlan.amountAvailable
-                  ).toFixed(2)
-                }}
-              </p>
-
-              <p class="keyNames">
-                <span>Expected income</span> KSH.
-                {{
-                  (
-                    (userPlan.plan.interestRate / 100) *
-                      userPlan.amountAvailable +
-                    userPlan.amountAvailable
-                  ).toFixed(2)
-                }}
-              </p>
-
-              <p class="keyNames">
-                <span>Maturity date</span>
-                {{
-                  userPlan.maturityDate != null
-                    ? getMaturityDate(userPlan.maturityDate)
-                    : "n/a"
-                }}
-              </p>
-            </div>
-
-            <div class="btns">
-              <button
-                @click="setShowModal({ planID: userPlan._id })"
-                class="depositBTN"
-              >
-                Deposit
-              </button>
-
-              <button
-                disabled
-                v-if="getMaturityDate(userPlan.maturityDate) > getTodayDate()"
-                @submit="withdrawFunds"
-                class="notYetBTN"
-              >
-                Not yet time
-              </button>
-
-              <button v-else @submit="withdrawFunds" class="withdrawBTN">
-                Withdraw
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -142,7 +31,7 @@ export default {
 
       amount: "",
       showModal: false,
-      isLoading: true,
+      isLoading: false,
       isSubmitting: false,
 
       planID: "",
@@ -157,79 +46,6 @@ export default {
     getTodayDate() {
       return moment().format("MMM Do YYYY");
     },
-    setShowModal({ planID }) {
-      this.showModal = true;
-      this.planID = planID;
-    },
-    async depositFunds() {
-      this.isSubmitting = true;
-      await axios
-        .post(`http://localhost:3000/api/user/payments/make-payment/`, {
-          phoneNumber: parseInt(this.phoneNumber),
-          userID: this.userID,
-          planID: this.planID,
-          amount: this.amount,
-        })
-        .then((response) => {
-          this.isSubmitting = false;
-          this.planID = "";
-          this.amount = "";
-
-          console.log(response.data);
-
-          if (response.data.ResponseCode === "0") {
-            //stk push sent
-            alert(
-              `${response.data.ResponseDescription}. Please check your phone for an M-PESA prompt to complete transaction.`
-            );
-            console.log("Success");
-          } else {
-            //some error has occured
-            console.log("An error occured");
-          }
-        })
-        .catch((err) => {
-          this.isSubmitting = false;
-          console.log(err);
-        });
-    },
-  },
-  async mounted() {
-    await axios
-      .get(
-        `http://localhost:3000/api/user/get-user-profile/${localStorage.getItem(
-          "userID"
-        )}`
-      )
-      .then((response) => {
-        if (response.data) {
-          this.firstName = response.data.firstName;
-          this.lastName = response.data.lastName;
-          this.email = response.data.email;
-          this.phoneNumber = response.data.phoneNumber;
-        } else {
-          console.log(response.data.message);
-        }
-      })
-      .catch((err) => {
-        this.isLoading = false;
-        console.log(err);
-      });
-
-    await axios
-      .get(
-        `http://localhost:3000/api/user/user-plans/get-my-plans/${localStorage.getItem(
-          "userID"
-        )}`
-      )
-      .then((response) => {
-        this.userPlans = response.data;
-        this.isLoading = false;
-      })
-      .catch((err) => {
-        this.isLoading = false;
-        console.log(err);
-      });
   },
 };
 </script>
@@ -280,7 +96,7 @@ export default {
   );
   filter: drop-shadow(2px 2px 4px #000000);
   padding: 40px;
-  border-radius: 20px;
+  border-radius: 10px;
   width: 30%;
 }
 .heading {

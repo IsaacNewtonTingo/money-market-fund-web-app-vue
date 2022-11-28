@@ -314,14 +314,20 @@ export default {
         })
         .then((response) => {
           this.isSubmitting = false;
-
-          console.log(response.data);
-
           if (response.data.status === "Success") {
             //stk push sent
 
             this.successMessage = `${response.data.message}`;
             this.showModal = false;
+
+            let reloadInterval = setInterval(() => {
+              this.getUserPlans();
+              this.getUserPayments();
+            }, 1000);
+
+            setTimeout(() => {
+              clearInterval(reloadInterval);
+            }, 5000);
           } else {
             //some error has occured
             console.log("An error occured");
@@ -395,7 +401,7 @@ export default {
   );
   filter: drop-shadow(2px 2px 4px #000000);
   padding: 40px;
-  border-radius: 20px;
+  border-radius: 10px;
   width: 30%;
 }
 .heading {

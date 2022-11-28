@@ -280,7 +280,7 @@ export default {
   );
   filter: drop-shadow(2px 2px 4px #000000);
   padding: 40px;
-  border-radius: 20px;
+  border-radius: 10px;
   width: 30%;
 }
 .heading {

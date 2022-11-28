@@ -11,12 +11,91 @@
       :phoneNumber="phoneNumber"
     />
 
-    <div v-if="showModal" class="modalContainer"></div>
+    <ErrorAlert
+      v-if="errorMessage"
+      :errorMessage="errorMessage"
+      @update-error-message="updateErrorMessage"
+    />
+
+    <SuccessAlert
+      v-if="successMessage"
+      :successMessage="successMessage"
+      @update-success-message="updateSuccessMessage"
+    />
+
+    <div v-if="showModal" class="modalContainer">
+      <div class="editInnerModal">
+        <form class="payForm" @submit.prevent="editProfile">
+          <div class="combineInputs">
+            <div class="inputsContainer">
+              <label for="">First Name</label>
+              <input
+                type="text"
+                name="firstName"
+                required
+                v-model="firstName"
+                placeholder="e.g John"
+              />
+            </div>
+
+            <div class="inputsContainer">
+              <label for="">Last name</label>
+              <input
+                type="text"
+                name="lastName"
+                required
+                v-model="lastName"
+                placeholder="e.g Doe"
+              />
+            </div>
+          </div>
+
+          <div class="combineInputs">
+            <div class="inputsContainer">
+              <label for="">Phone number</label>
+              <input
+                type="tel"
+                name="phoneNumber"
+                required
+                v-model="phoneNumber"
+                placeholder="********"
+              />
+            </div>
+
+            <div class="inputsContainer">
+              <label for="">Password</label>
+              <input
+                type="password"
+                name="password"
+                required
+                v-model="password"
+                placeholder="********"
+              />
+            </div>
+          </div>
+
+          <button :disabled="isSubmitting" class="depositBTN">
+            <img
+              class="loadingGif"
+              v-if="isSubmitting"
+              src="../../assets/loading.gif"
+              alt=""
+            />
+            <div v-else>Submit</div>
+          </button>
+          <button @click="this.showModal = false" class="withdrawBTN">
+            Cancel
+          </button>
+        </form>
+      </div>
+    </div>
 
     <div class="rightItems">
-      <div class="combText">
+      <div class="combText personalTitle">
         <h3 class="subHeading">Personal details</h3>
-        <h3 class="subHeading">Edit</h3>
+        <h3 @click="this.showModal = true" class="subHeading editPersonal">
+          Edit
+        </h3>
       </div>
 
       <div class="detailsContainer">
@@ -59,6 +138,33 @@
           <!-- <h4>Edit details</h4> -->
         </div>
       </div>
+
+      <hr class="divider" />
+
+      <div class="editUniques">
+        <form action="" class="changeEmail">
+          <p>Change Email</p>
+
+          <label for="">New email</label>
+          <input type="email" placeholder="e.g janedoe@gmail.com" />
+
+          <label for="">Password</label>
+          <input type="password" placeholder="********" />
+
+          <button class="editBTN">Submit</button>
+        </form>
+
+        <form action="" class="changePassword">
+          <p>Change password</p>
+          <label for="">Old password</label>
+          <input type="password" placeholder="********" />
+
+          <label for="">New Password</label>
+          <input type="password" placeholder="********" />
+
+          <button class="editBTN">Submit</button>
+        </form>
+      </div>
     </div>
   </div>
 </template>
@@ -66,11 +172,12 @@
 <script>
 import LeftFloat from "@/components/leftFloat.vue";
 import axios from "axios";
-import moment from "moment";
+import ErrorAlert from "@/components/custom-error-alert.vue";
+import SuccessAlert from "@/components/custom-success-alert.vue";
 
 export default {
   name: "profile",
-  components: { LeftFloat },
+  components: { LeftFloat, ErrorAlert, SuccessAlert },
   data() {
     return {
       userID: localStorage.getItem("userID"),
@@ -78,6 +185,7 @@ export default {
       lastName: "",
       phoneNumber: "",
       email: "",
+      password: "",
 
       amount: "",
       showModal: false,
@@ -85,12 +193,46 @@ export default {
       isSubmitting: false,
 
       userPlans: [],
+
+      errorMessage: "",
+      successMessage: "",
     };
   },
   methods: {
-    setShowModal({ planID }) {
-      this.showModal = true;
-      this.planID = planID;
+    async editProfile() {
+      this.isSubmitting = true;
+      await axios
+        .put(
+          `http://localhost:3000/api/user/update-profile/${localStorage.getItem(
+            "userID"
+          )}`,
+          {
+            firstName: this.firstName,
+            lastName: this.lastName,
+            email: this.email,
+            phoneNumber: this.phoneNumber,
+            password: this.password,
+          }
+        )
+        .then((response) => {
+          this.isSubmitting = false;
+          if (response.data.status === "Success") {
+            this.successMessage = response.data.message;
+            this.showModal = false;
+          } else {
+            this.errorMessage = response.data.message;
+          }
+        })
+        .catch((err) => {
+          this.errorMessage = err.message;
+          this.isSubmitting = false;
+        });
+    },
+    updateSuccessMessage(successMessage) {
+      this.successMessage = successMessage;
+    },
+    updateErrorMessage(errorMessage) {
+      this.errorMessage = errorMessage;
     },
   },
   async mounted() {
@@ -152,7 +294,7 @@ export default {
   width: 100px;
   height: 100px;
 }
-.innerModal {
+.editInnerModal {
   background: linear-gradient(
     146.03deg,
     #091e18 13.77%,
@@ -160,8 +302,8 @@ export default {
   );
   filter: drop-shadow(2px 2px 4px #000000);
   padding: 40px;
-  border-radius: 20px;
-  width: 30%;
+  border-radius: 10px;
+  width: 40%;
 }
 .heading {
   color: #006b4d;
@@ -170,6 +312,11 @@ export default {
 .subHeading {
   font-weight: 800;
   color: #006b4d;
+}
+.editPersonal {
+  cursor: pointer;
+  text-decoration-line: underline;
+  color: tomato;
 }
 .planContainer {
   display: flex;
@@ -183,7 +330,9 @@ export default {
   flex-direction: row;
   justify-content: space-between;
 }
-
+.personalTitle {
+  width: 85%;
+}
 .btns {
   display: flex;
   flex-direction: column;
@@ -232,5 +381,43 @@ export default {
   font-weight: 600;
   color: #7bcab4;
   font-size: 16px;
+}
+.editUniques {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 85%;
+}
+.editUniques button {
+  color: white;
+  background: #006b4d;
+}
+.editUniques p {
+  color: #006b4d;
+  font-weight: bolder;
+  font-size: 20px;
+  margin: 0 0 40px 0;
+}
+.editUniques form {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 40px;
+  background-color: #effffb;
+  box-shadow: #dbdbdb 0px 0px 20px;
+  border-radius: 10px;
+}
+.editUniques label {
+  color: #7bcab4;
+}
+.editUniques input {
+  padding: 0 30px;
+  border: solid 1px #7bcab4;
+}
+.divider {
+  height: 0.5px;
+  background: #f0f0f0;
+  border: none;
+  width: 85%;
+  margin: 100px 0;
 }
 </style>

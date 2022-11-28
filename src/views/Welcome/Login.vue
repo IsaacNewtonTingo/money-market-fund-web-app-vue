@@ -135,7 +135,7 @@ export default {
 .logForm {
   display: flex;
   flex-direction: column;
-  border-radius: 20px;
+  border-radius: 10px;
   width: 30%;
   background: linear-gradient(
     146.03deg,

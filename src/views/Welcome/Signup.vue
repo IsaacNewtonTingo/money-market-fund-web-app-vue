@@ -254,7 +254,7 @@ export default {
   display: flex;
   text-align: center;
   flex-direction: column;
-  border-radius: 20px;
+  border-radius: 10px;
   width: 35%;
   background: linear-gradient(
     146.03deg,
@@ -327,7 +327,7 @@ button {
 
 .codeForm {
   width: 30%;
-  border-radius: 20px;
+  border-radius: 10px;
   background: linear-gradient(
     146.03deg,
     #091e18 13.77%,

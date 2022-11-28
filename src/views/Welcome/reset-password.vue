@@ -193,7 +193,7 @@ export default {
 }
 .newCodeModal {
   width: 40%;
-  border-radius: 20px;
+  border-radius: 10px;
   background: linear-gradient(
     146.03deg,
     #091e18 13.77%,
@@ -207,7 +207,7 @@ export default {
 .logForm {
   display: flex;
   flex-direction: column;
-  border-radius: 20px;
+  border-radius: 10px;
   width: 30%;
   background: linear-gradient(
     146.03deg,

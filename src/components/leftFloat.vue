@@ -25,9 +25,7 @@
       </div>
 
       <div class="linky">
-        <router-link :to="{ name: 'myTransactions' }"
-          >My transactions</router-link
-        >
+        <router-link :to="{ name: 'myTransactions' }">My deposits</router-link>
       </div>
 
       <div class="linky">
@@ -104,7 +102,7 @@ nav a.router-link-exact-active {
 .profilePic {
   width: 100px;
   height: 100px;
-  border-radius: 50px;
+  border-radius: 50%;
   object-fit: cover;
 }
 .nameText {
