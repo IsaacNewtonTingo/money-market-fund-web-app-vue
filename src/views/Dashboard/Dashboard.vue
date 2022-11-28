@@ -55,7 +55,7 @@
       @update-success-message="updateSuccessMessage"
     />
 
-    <div class="rightItems">
+    <div class="mainView">
       <h1 class="heading">Hello {{ firstName }} {{ lastName }}</h1>
 
       <div class="savingsPlans">
@@ -64,11 +64,11 @@
           <router-link to="/dashboard" class="viewAll">View all</router-link>
         </div>
 
-        <div class="planContainer">
+        <div class="mainPlanContainer">
           <div
             v-for="userPlan in userPlans"
             :key="userPlan._id"
-            class="planItem"
+            class="planItemCard"
           >
             <p class="planName">
               {{ userPlan.plan.investmentPlanName }} <br />
@@ -136,7 +136,7 @@
           </div>
         </div>
 
-        <router-link :to="{ name: 'savingPlans' }" class="joinOtherPlan"
+        <router-link :to="{ name: 'savingPlans' }" class="joinOtherPlanText"
           >Create another saving plan</router-link
         >
       </div>
@@ -351,10 +351,10 @@ export default {
 </script>
 
 <style>
-.rightItems {
+.mainView {
   float: right;
   padding: 40px;
-  width: 70%;
+  width: 75%;
   background: rgb(248, 255, 250);
 }
 .modalContainer {
@@ -405,6 +405,8 @@ export default {
 }
 .heading {
   color: #006b4d;
+  font-weight: 800;
+  font-size: 35px;
 }
 .savingsPlans {
   margin: 40px 0;
@@ -413,12 +415,13 @@ export default {
   font-weight: 800;
   color: #006b4d;
 }
-.planContainer {
+.mainPlanContainer {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   margin: 20px 0 0 0;
   flex-wrap: wrap;
+  width: 100%;
 }
 .combText {
   display: flex;
@@ -438,8 +441,8 @@ export default {
 .planName span {
   color: #858585;
 }
-.planItem {
-  width: 20%;
+.planItemCard {
+  width: 23%;
   background: linear-gradient(
     146.03deg,
     #091e18 13.77%,
@@ -447,19 +450,21 @@ export default {
   );
   filter: drop-shadow(2px 2px 4px #000000);
   border-radius: 10px;
-  height: 300px;
+  height: 400px;
   padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  height: 400px;
+  margin: 0 0 40px 0;
 }
 .btns {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
-.joinOtherPlan {
+.joinOtherPlanText {
   color: rgb(90, 205, 255);
   text-decoration-line: underline;
   font-weight: 800;
@@ -488,11 +493,16 @@ export default {
 .depositBTN {
   background: #195846;
   font-size: 10px;
+  color: white;
+  font-weight: 800;
 }
 .withdrawBTN {
   background: none;
   border: solid #9a9a9a 1px;
   font-size: 10px;
+  color: white;
+  font-weight: 800;
+  margin: 20px 0 0 0;
 }
 .notYetBTN {
   background: none;
@@ -526,7 +536,6 @@ export default {
 }
 .previousTransactionsContainer {
   width: 100%;
-  margin: 100px 0 0 0;
 }
 .paymentContainer {
   display: flex;

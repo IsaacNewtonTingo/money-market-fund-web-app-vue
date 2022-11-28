@@ -58,6 +58,9 @@ export default {
   margin: 0;
   height: 40px;
   font-size: 10px;
+  background: #009f72;
+  color: #ffffff;
+  font-weight: 800;
 }
 .logBTN {
   margin: 0 40px 0 0;
@@ -66,5 +69,7 @@ export default {
   border: solid rgb(0, 182, 134) 2px;
   height: 40px;
   font-size: 10px;
+  color: white;
+  font-weight: 800;
 }
 </style>

@@ -115,6 +115,7 @@
           />
         </div>
       </div>
+
       <button :disabled="isSubmitting" class="depositBTN">
         <img
           class="loadingGif"
@@ -255,7 +256,6 @@ export default {
   text-align: center;
   flex-direction: column;
   border-radius: 10px;
-  width: 35%;
   background: linear-gradient(
     146.03deg,
     #091e18 13.77%,
@@ -263,7 +263,6 @@ export default {
   );
   filter: drop-shadow(2px 2px 4px #000000);
   padding: 40px;
-  margin: 0;
 }
 .combineInputs {
   display: flex;
@@ -275,19 +274,19 @@ export default {
   display: flex;
   flex-direction: column;
 }
-label {
+.signContainerForm label {
   color: white;
   font-weight: 700;
   text-align: left;
 }
-.formsCont input {
+.signContainerForm input {
   height: 50px;
   border-radius: 10px;
   margin: 20px 0;
   padding: 0 30px;
-  width: 70%;
+  width: 99%;
 }
-button {
+.signContainerForm button {
   height: 50px;
   border-radius: 10px;
   margin: 10px 0 0 0;

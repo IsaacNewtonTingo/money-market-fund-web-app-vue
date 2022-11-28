@@ -93,7 +93,7 @@ export default {
   padding: 20px 0;
 }
 .leftFloat {
-  width: 20%;
+  width: 25%;
   background: rgb(248, 255, 250);
   height: 100%;
   position: fixed;

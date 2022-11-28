@@ -130,13 +130,13 @@ export default {
   );
 }
 .logIMG {
-  width: 30%;
+  width: 25%;
 }
 .logForm {
   display: flex;
   flex-direction: column;
   border-radius: 10px;
-  width: 30%;
+  width: 40%;
   background: linear-gradient(
     146.03deg,
     #091e18 13.77%,
@@ -150,13 +150,13 @@ label {
   font-weight: 700;
   text-align: left;
 }
-input {
+.logForm input {
   height: 50px;
   border-radius: 10px;
   margin: 20px 0;
   padding: 0 30px;
 }
-button {
+.logForm button {
   height: 50px;
   border-radius: 10px;
   margin: 10px 0 0 0;
@@ -165,6 +165,7 @@ button {
   font-weight: 800;
   border: none;
   cursor: pointer;
+  font-size: 14px;
 }
 .dontHaveAccount {
   display: flex;
@@ -183,20 +184,24 @@ button {
 .dontHaveAccount p {
   color: white;
   text-align: center;
+  font-size: 12px;
 }
 .dontHaveAccount a {
   color: tomato;
   font-weight: bold;
+  font-size: 12px;
   margin-left: 10px;
 }
 
 .forgot p {
   color: white;
+  font-size: 12px;
   text-align: center;
 }
 .forgot a {
   color: tomato;
   font-weight: bold;
+  font-size: 12px;
   margin-left: 10px;
 }
 </style>

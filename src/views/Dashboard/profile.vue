@@ -101,6 +101,7 @@
       <div class="detailsContainer">
         <div class="profileImageContainer">
           <img
+            class="profilePicture"
             src="https://media.istockphoto.com/id/1386479313/photo/happy-millennial-afro-american-business-woman-posing-isolated-on-white.jpg?b=1&s=170667a&w=0&k=20&c=ahypUC_KTc95VOsBkzLFZiCQ0VJwewfrSV43BOrLETM="
             alt="profile picture"
           />
@@ -188,7 +189,7 @@ export default {
       password: "",
 
       amount: "",
-      showModal: false,
+      showModal: true,
       isLoading: true,
       isSubmitting: false,
 
@@ -265,7 +266,7 @@ export default {
 .rightItems {
   float: right;
   padding: 40px;
-  width: 70%;
+  width: 75%;
   background: rgb(248, 255, 250);
 }
 .modalContainer {
@@ -346,8 +347,8 @@ export default {
 .profileImageContainer {
   margin: 0 40px 0 0;
 }
-.profileImageContainer img {
-  width: 200px;
+.profilePicture {
+  width: 300px;
   height: 200px;
   object-fit: cover;
   border-radius: 10px;
@@ -371,10 +372,9 @@ export default {
   color: #006b4d;
   font-size: 18px;
   padding: 20px;
-  width: 200px;
+  width: 250px;
   background: #effffb;
   border-radius: 10px;
-  /* border: solid 1px rgb(248, 255, 250); */
   box-shadow: #dbdbdb 2px 2px 2px;
 }
 .userDetailsContainer span {
@@ -412,6 +412,8 @@ export default {
 .editUniques input {
   padding: 0 30px;
   border: solid 1px #7bcab4;
+  border-radius: 10px;
+  margin: 20px 0;
 }
 .divider {
   height: 0.5px;
@@ -419,5 +421,20 @@ export default {
   border: none;
   width: 85%;
   margin: 100px 0;
+}
+.combineInputs {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+.inputsContainer {
+  display: flex;
+  justify-content: center;
+}
+.inputsContainer input {
+  border-radius: 10px;
+  margin: 20px 0;
+  width: 95%;
 }
 </style>

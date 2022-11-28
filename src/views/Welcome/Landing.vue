@@ -13,9 +13,7 @@
     <img src="../../assets/displayImg.png" alt="display image" />
   </div>
 
-  <div class="aboutUs" id="aboutUs">
-    <h2>About us</h2>
-  </div>
+  <div class="aboutUs" id="aboutUs"></div>
 </template>
 
 <script>
@@ -57,9 +55,13 @@ export default {
 .getStartedBTN {
   width: 200px;
   margin: 40px 0;
+  background-color: darkgreen;
+  color: white;
+  font-weight: 800;
 }
 .leftIntro h1 {
   font-weight: bolder;
+  font-size: 30px;
 }
 .aboutUs {
   padding: 80px;
