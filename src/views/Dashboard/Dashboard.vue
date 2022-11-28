@@ -4,25 +4,19 @@
   </div>
 
   <div v-else>
-    <LeftFloat
-      :firstName="firstName"
-      :lastName="lastName"
-      :email="email"
-      :phoneNumber="phoneNumber"
-      :active="active"
-    />
+    <LeftFloat />
 
     <div v-if="showModal" class="modalContainer">
       <div v-if="showPayForm" class="innerModal">
         <form class="payForm" @submit.prevent="depositFunds">
-          <label for="">Phone number</label>
+          <label>Phone number</label>
           <input
             type="tel"
             placeholder="e.g 254724753175"
             v-model="this.phoneNumber"
           />
 
-          <label for="">Amount</label>
+          <label>Amount</label>
           <input v-model="this.amount" type="number" placeholder="e.g 2000" />
 
           <button :disabled="isSubmitting" class="depositBTN">
@@ -141,6 +135,10 @@
             </div>
           </div>
         </div>
+
+        <router-link :to="{ name: 'savingPlans' }" class="joinOtherPlan"
+          >Create another saving plan</router-link
+        >
       </div>
 
       <div class="previousTransactionsContainer">
@@ -235,6 +233,7 @@ export default {
           )}`
         )
         .then((response) => {
+          this.isLoading = false;
           if (response.data) {
             this.firstName = response.data.firstName;
             this.lastName = response.data.lastName;
@@ -382,7 +381,7 @@ export default {
   height: 100vh;
   text-align: center;
   flex: 1;
-  background: rgb(248, 255, 250);
+  background: rgb(18, 78, 35);
 }
 .loadingScreen img {
   width: 100px;
@@ -391,7 +390,7 @@ export default {
 .viewAll {
   text-decoration-line: underline;
   font-weight: 800;
-  color: #006b4d;
+  color: tomato;
 }
 .innerModal {
   background: linear-gradient(
@@ -418,13 +417,16 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin: 20px 0;
+  margin: 20px 0 0 0;
   flex-wrap: wrap;
 }
 .combText {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+.combText a {
+  color: rgb(90, 205, 255);
 }
 .planName {
   color: white;
@@ -447,7 +449,6 @@ export default {
   border-radius: 10px;
   height: 300px;
   padding: 20px;
-  margin: 0 0 40px 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -457,6 +458,12 @@ export default {
   display: flex;
   flex-direction: column;
   width: 100%;
+}
+.joinOtherPlan {
+  color: rgb(90, 205, 255);
+  text-decoration-line: underline;
+  font-weight: 800;
+  margin: 40px 0 0 0;
 }
 .loadingGif {
   width: 30px;
@@ -519,6 +526,7 @@ export default {
 }
 .previousTransactionsContainer {
   width: 100%;
+  margin: 100px 0 0 0;
 }
 .paymentContainer {
   display: flex;

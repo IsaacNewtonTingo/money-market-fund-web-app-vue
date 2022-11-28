@@ -15,7 +15,6 @@
 
 <script>
 import LeftFloat from "@/components/leftFloat.vue";
-import axios from "axios";
 import moment from "moment";
 
 export default {

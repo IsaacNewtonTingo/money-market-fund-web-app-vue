@@ -8,7 +8,7 @@
       />
 
       <div class="rightSemiTexts">
-        <p class="nameText">{{ firstName }} {{ lastName }}</p>
+        <p class="nameText">{{ this.firstName }} {{ this.lastName }}</p>
         <p class="viewProfText">View profile</p>
       </div>
     </div>
@@ -42,14 +42,44 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
-  props: ["firstName", "lastName", "email", "phoneNumber", "active"],
+  // props: ["firstName", "lastName", "email", "phoneNumber", "active"],
   name: "LeftFloat",
-
+  data() {
+    return {
+      userID: localStorage.getItem("userID"),
+      firstName: "",
+      lastName: "",
+    };
+  },
   methods: {
     goToProfile() {
       this.$router.push("profile");
     },
+    async getUserProfile() {
+      await axios
+        .get(
+          `http://localhost:3000/api/user/get-user-profile/${localStorage.getItem(
+            "userID"
+          )}`
+        )
+        .then((response) => {
+          if (response.data) {
+            this.firstName = response.data.firstName;
+            this.lastName = response.data.lastName;
+          } else {
+            console.log(response.data.message);
+          }
+        })
+        .catch((err) => {
+          this.isLoading = false;
+          console.log(err);
+        });
+    },
+  },
+  mounted() {
+    this.getUserProfile();
   },
 };
 </script>

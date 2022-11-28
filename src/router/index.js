@@ -14,6 +14,7 @@ import MyTransactions from "../views/Dashboard/my-transactions.vue";
 import MyWithdrawals from "../views/Dashboard/myWithdrawals.vue";
 import Settings from "../views/Dashboard/settings.vue";
 import Profile from "../views/Dashboard/profile.vue";
+import SavingPlans from "../views/Dashboard/saving-plans.vue";
 
 const routes = [
   {
@@ -106,6 +107,13 @@ const routes = [
     name: "profile",
     component: Profile,
     meta: { title: "Profile" },
+  },
+
+  {
+    path: "/saving-plans",
+    name: "savingPlans",
+    component: SavingPlans,
+    meta: { title: "Saving plans" },
   },
 ];
 
