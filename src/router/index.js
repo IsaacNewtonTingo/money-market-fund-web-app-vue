@@ -20,78 +20,92 @@ const routes = [
     path: "/",
     name: "Landing",
     component: Landing,
+    meta: { title: "Landing" },
   },
 
   {
     path: "/login",
     name: "login",
     component: Login,
+    props: true,
+    meta: { title: "Login" },
   },
 
   {
     path: "/signup",
     name: "signup",
     component: Signup,
+    meta: { title: "Signup" },
   },
 
   {
     path: "/reset-password",
     name: "resetPassword",
     component: ResetPassword,
+    meta: { title: "Reset password" },
   },
 
   {
     path: "/about-us",
     name: "aboutUs",
     component: AboutUs,
+    meta: { title: "About us" },
   },
 
   {
     path: "/contact-us",
     name: "contactUs",
     component: ContactUs,
+    meta: { title: "Contact us" },
   },
 
   {
     path: "/plans",
     name: "plans",
     component: Plans,
+    meta: { title: "Plans" },
   },
 
   {
     path: "/dashboard",
     name: "dashboard",
     component: Dashboard,
+    meta: { title: "Dashboard" },
   },
 
   {
     path: "/all-user-plans",
     name: "allUserPlans",
     component: AllUserPlans,
+    meta: { title: "All user plans" },
   },
 
   {
     path: "/my-transactions",
     name: "myTransactions",
     component: MyTransactions,
+    meta: { title: "My transactions" },
   },
 
   {
     path: "/my-withdrawals",
     name: "myWithdrawals",
     component: MyWithdrawals,
+    meta: { title: "My withdrawals" },
   },
 
   {
     path: "/settings",
     name: "settings",
     component: Settings,
+    meta: { title: "Settings" },
   },
 
   {
     path: "/profile",
     name: "profile",
     component: Profile,
+    meta: { title: "Profile" },
   },
 ];
 
