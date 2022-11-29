@@ -189,7 +189,7 @@ export default {
       password: "",
 
       amount: "",
-      showModal: true,
+      showModal: false,
       isLoading: true,
       isSubmitting: false,
 

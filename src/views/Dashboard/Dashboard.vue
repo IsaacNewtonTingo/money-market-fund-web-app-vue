@@ -373,6 +373,15 @@ export default {
   display: flex;
   flex-direction: column;
 }
+.payForm input {
+  border-radius: 10px;
+  margin: 20px 0;
+}
+.payForm button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .loadingScreen {
   display: flex;
   align-items: center;

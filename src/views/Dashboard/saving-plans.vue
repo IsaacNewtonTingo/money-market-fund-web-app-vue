@@ -1,8 +1,40 @@
 <template>
   <LeftFloat />
 
+  <div v-if="joinPlanModal" class="joinPlanModal">
+    <form class="joinPlanForm">
+      <p class="lanNameText">Lock savings</p>
+      <label>Duration of saving(In days)</label>
+      <input placeholder="e.g 90" type="text" />
+
+      <button
+        class="
+          focus:outline-none
+          text-white
+          bg-green-700
+          hover:bg-green-800
+          focus:ring-4 focus:ring-green-300
+          font-medium
+          rounded-lg
+          text-sm
+          px-5
+          py-2.5
+          mr-2
+          mb-2
+          dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800
+        "
+      >
+        Submit
+      </button>
+      <button class="cancelPlan" @click="this.joinPlanModal = false">
+        Cancel
+      </button>
+    </form>
+  </div>
+
   <div class="mainPlanView">
     <!-- <h1 class="planText">Our savings plan</h1> -->
+
     <ol class="relative border-l border-gray-200 dark:border-gray-700">
       <li
         v-for="savingPlan in savingsPlans"
@@ -66,7 +98,29 @@
         <p class="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
           {{ savingPlan.description }}
         </p>
-        <button class="joinPlanBTN">Create plan</button>
+
+        <button
+          @click="this.joinPlanModal = true"
+          type="button"
+          class="
+            joinPlanBTN
+            focus:outline-none
+            text-white
+            bg-green-700
+            hover:bg-green-800
+            focus:ring-4 focus:ring-green-300
+            font-medium
+            rounded-lg
+            text-sm
+            px-5
+            py-2.5
+            mr-2
+            mb-2
+            dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800
+          "
+        >
+          Create plan
+        </button>
       </li>
     </ol>
   </div>
@@ -81,6 +135,7 @@ export default {
   data() {
     return {
       savingsPlans: [],
+      joinPlanModal: true,
     };
   },
   methods: {
@@ -119,5 +174,49 @@ export default {
   margin: 40px 0;
   color: white;
   font-size: 14px;
+}
+.joinPlanModal {
+  width: 100vw;
+  height: 100vh;
+  background: rgba(159, 184, 176, 0.95);
+  display: flex;
+  flex: 1;
+  position: absolute;
+  z-index: 1;
+  align-items: center;
+  justify-content: center;
+}
+.joinPlanForm {
+  background: linear-gradient(
+    146.03deg,
+    #091e18 13.77%,
+    rgba(159, 184, 176, 0) 148.56%
+  );
+  filter: drop-shadow(2px 2px 4px #000000);
+  padding: 40px;
+  border-radius: 10px;
+  width: 30%;
+}
+.joinPlanForm {
+  display: flex;
+  flex-direction: column;
+}
+.joinPlanForm p {
+  color: white;
+  font-weight: 800;
+  margin: 0 0 20px 0;
+}
+.joinPlanForm button {
+  height: 50px;
+  margin: 20px 0 0 0;
+  color: white;
+  font-weight: 800;
+}
+.joinPlanForm input {
+  border-radius: 10px;
+  padding: 0 20px;
+}
+.cancelPlan {
+  border: solid 2px rgb(79, 201, 138);
 }
 </style>
